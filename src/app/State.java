@@ -1,4 +1,4 @@
-package app.Tree;
+package app;
 
 import java.util.ArrayList;
 import org.javatuples.Pair;;

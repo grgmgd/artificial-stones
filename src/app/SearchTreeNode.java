@@ -1,4 +1,4 @@
-package app.Tree;
+package app;
 
 /**
  * SearchTreeNode
