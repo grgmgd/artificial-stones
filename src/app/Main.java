@@ -1,6 +1,6 @@
 package app;
 
-public class App {
+public class Main {
 
     /**
      * The method uses search to try to formulate a winning plan with the
@@ -34,6 +34,8 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello Java");
+        String grid = "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
+        String strategy = "BF";
+        solve(grid, strategy, true);
     }
 }
