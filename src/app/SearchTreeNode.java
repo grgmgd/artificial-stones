@@ -11,6 +11,10 @@ public class SearchTreeNode {
     public int cost;
     public int depth;
 
+    public SearchTreeNode() {
+
+    }
+
     public SearchTreeNode(State state, SearchTreeNode parent, String leadingOperator, int cost, int depth) {
         this.state = state;
         this.parent = parent;
