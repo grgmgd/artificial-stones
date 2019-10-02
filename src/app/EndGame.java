@@ -35,8 +35,24 @@ public class EndGame extends GenericSearchProblem {
 
     @Override
     public State transitionFunction(State state, Operators operator) {
-        // TODO: Auto-generated method stub
-        return super.transitionFunction(state, operator);
+
+        State newState = new State();
+
+        switch (operator) {
+        case UP:
+            newState.position.setAt1(state.position.getValue0() + 1);
+            break;
+        case DOWN:
+            newState.position.setAt1(state.position.getValue0() - 1);
+            break;
+        case LEFT:
+            newState.position.setAt1(state.position.getValue1() + 1);
+            break;
+        case RIGHT:
+            newState.position.setAt1(state.position.getValue1() - 1);
+            break;
+        }
+        return newState;
     }
 
     public SearchTreeNode figure() {
