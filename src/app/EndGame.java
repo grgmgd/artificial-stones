@@ -57,7 +57,10 @@ public class EndGame extends GenericSearchProblem {
 
     public SearchTreeNode figure() {
         while (!nodes.isEmpty()) {
-
+            SearchTreeNode node = nodes.remove();
+            if (goalTest(node.state))
+                return node;
+            // TODO: call Qing-function and append the new nodes
         }
 
         return null;
