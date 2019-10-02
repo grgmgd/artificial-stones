@@ -22,13 +22,15 @@ public class EndGame extends GenericSearchProblem {
 
     @Override
     public SearchTreeNode initialState() {
-        // TODO Auto-generated method stub
+        // TODO: Auto-generated method stub
         return super.initialState();
     }
 
     @Override
     public Boolean goalTest(State state) {
-        return super.goalTest(state);
+        Boolean condition = state.remainingHealth > 0 && state.position.getValue0() == thanosPosition.getValue0()
+                && state.position.getValue1() == thanosPosition.getValue1() && state.remainingStones.size() == 0;
+        return condition;
     }
 
     @Override
