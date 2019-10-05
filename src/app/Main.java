@@ -35,22 +35,6 @@ public class Main {
 		return formulatedPlan;
 	}
 
-	public ArrayList<SearchTreeNode> queueing(SearchTreeNode node) {
-		return null;
-	}
-
-	public void searchBreadthFirst(SearchTreeNode node) {
-		
-	}
-	
-	public void searchDepthFirst(SearchTreeNode node) {
-		
-	}
-	
-public void searchUniFormCost(SearchTreeNode node) {
-		
-	}
-
 	public static void main(String[] args) throws Exception {
 		String grid = "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
 		String strategy = "BF";
