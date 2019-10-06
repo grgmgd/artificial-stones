@@ -21,8 +21,4 @@ public abstract class GenericSearchProblem {
     public State initialState(String problem) {
         return new State();
     }
-
-    // public LinkedList<SearchTreeNode> Qing(State state) {
-
-    // }
 }
