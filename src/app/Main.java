@@ -22,6 +22,8 @@ public class Main {
         String cost = "";
         String nodes = "";
 
+        EndGame endGame = new EndGame(grid);
+
         if (plan == null)
             return "There is no solution";
 
