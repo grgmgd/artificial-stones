@@ -1,5 +1,6 @@
 package app;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -8,22 +9,57 @@ import org.javatuples.Pair;
 /**
  * EndGame
  */
+
 public class EndGame extends GenericSearchProblem {
 
-    Pair<Integer, Integer> mapSize;
+    Pair<Integer, Integer> gridSize;
     Pair<Integer, Integer> thanosPosition;
     Queue<SearchTreeNode> nodes;
 
-    public EndGame() {
-        SearchTreeNode node = initialState();
+    public EndGame(String problem) {
+        State state = initialState(problem);
+        SearchTreeNode node = new SearchTreeNode(state, null, null, 0, 0);
         nodes = new LinkedList<SearchTreeNode>();
         nodes.add(node);
     }
 
     @Override
-    public SearchTreeNode initialState() {
-        // TODO: Auto-generated method stub
-        return super.initialState();
+    public State initialState(String problem) {
+        String[] parts = problem.split(";");
+
+        String[] gridSizeString = parts[0].split(",");
+        gridSize = new Pair<Integer, Integer>(Integer.parseInt(gridSizeString[0]), Integer.parseInt(gridSizeString[1]));
+
+        String[] ironManLocationString = parts[1].split(",");
+        String[] thanosLocationString = parts[2].split(",");
+
+        String[] stonesIndicies = parts[3].split(",");
+        ArrayList<Pair<Integer, Integer>> remainingStones = new ArrayList<>();
+
+        for (int i = 0; i < stonesIndicies.length - 1; i += 2) {
+            Pair<Integer, Integer> stone = new Pair<Integer, Integer>(Integer.parseInt(stonesIndicies[i]),
+                    Integer.parseInt(stonesIndicies[i + 1]));
+            remainingStones.add(stone);
+        }
+
+        String[] warriorsIndicies = parts[4].split(",");
+        ArrayList<Pair<Integer, Integer>> warriorsLocations = new ArrayList<>();
+
+        for (int i = 0; i < warriorsIndicies.length - 1; i += 2) {
+            Pair<Integer, Integer> warrior = new Pair<Integer, Integer>(Integer.parseInt(warriorsIndicies[i]),
+                    Integer.parseInt(warriorsIndicies[i + 1]));
+            warriorsLocations.add(warrior);
+        }
+
+        thanosPosition = new Pair<Integer, Integer>(Integer.parseInt(thanosLocationString[0]),
+                Integer.parseInt(thanosLocationString[1]));
+
+        Pair<Integer, Integer> position = new Pair<Integer, Integer>(Integer.parseInt(ironManLocationString[0]),
+                Integer.parseInt(ironManLocationString[1]));
+
+        State state = new State(position, thanosPosition, remainingStones, 100);
+
+        return state;
     }
 
     @Override
