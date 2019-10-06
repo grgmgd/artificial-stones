@@ -1,6 +1,6 @@
 package app;
 
-import java.util.Queue;
+import java.util.LinkedList;
 
 /**
  * GenericSearchProblem
@@ -8,17 +8,13 @@ import java.util.Queue;
 
 public abstract class GenericSearchProblem {
 
-    Queue<SearchTreeNode> nodes;
+	LinkedList<SearchTreeNode> nodes;
 
-    public Boolean goalTest(State state) {
-        return false;
-    }
+	public GenericSearchProblem() {
+		nodes = new LinkedList<SearchTreeNode>();
+	}
 
-    public State transitionFunction(State state, Operators operator) {
-        return new State();
-    }
-
-    public State initialState(String problem) {
-        return new State();
-    }
+	public State initialState(String problem) {
+		return new State();
+	}
 }
