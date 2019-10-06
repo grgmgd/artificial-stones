@@ -18,7 +18,7 @@ public class EndGame extends GenericSearchProblem {
 
 	Pair<Integer, Integer> gridSize;
 	Pair<Integer, Integer> thanosPosition;
-	Queue<SearchTreeNode> nodes;
+	LinkedList<SearchTreeNode> nodes;
 	SearchingAlgorithms strategy;
 
 	public EndGame(String problem, SearchingAlgorithms strat) {

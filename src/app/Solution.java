@@ -48,6 +48,6 @@ public class Solution {
 
 	@Override
 	public String toString() {
-		return plan + "," + cost + "," + nodes;
+		return plan + ";" + cost + ";" + nodes;
 	}
 }
