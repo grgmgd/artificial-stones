@@ -21,12 +21,12 @@ public class EndGame extends GenericSearchProblem {
 	LinkedList<SearchTreeNode> nodes;
 	SearchingAlgorithms strategy;
 
-	public EndGame(String problem, SearchingAlgorithms strat) {
+	public EndGame(String problem, SearchingAlgorithms strategy) {
 		State state = initialState(problem);
 		SearchTreeNode node = new SearchTreeNode(state, null, null, 0, 0);
 		nodes = new LinkedList<SearchTreeNode>();
 		nodes.add(node);
-		strategy = strat;
+		this.strategy = strategy;
 	}
 
 	@Override
