@@ -1,40 +1,80 @@
 package app;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import org.javatuples.Pair;
 
+import searching.algorithms.BreadthFirst;
+import searching.algorithms.DepthFirst;
+import searching.algorithms.SearchingAlgorithms;
+
 /**
  * EndGame
  */
+
 public class EndGame extends GenericSearchProblem {
 
-	Pair<Integer, Integer> mapSize;
+	Pair<Integer, Integer> gridSize;
 	Pair<Integer, Integer> thanosPosition;
 	Queue<SearchTreeNode> nodes;
+	SearchingAlgorithms strategy;
 
-	public EndGame() {
-		SearchTreeNode node = initialState();
+	public EndGame(String problem, SearchingAlgorithms strat) {
+		State state = initialState(problem);
+		SearchTreeNode node = new SearchTreeNode(state, null, null, 0, 0);
 		nodes = new LinkedList<SearchTreeNode>();
 		nodes.add(node);
+		strategy = strat;
 	}
 
 	@Override
-	public SearchTreeNode initialState() {
-		return null;
-		// TODO: Auto-generated method stub
+	public State initialState(String problem) {
+		String[] parts = problem.split(";");
+
+		String[] gridSizeString = parts[0].split(",");
+		gridSize = new Pair<Integer, Integer>(Integer.parseInt(gridSizeString[0]), Integer.parseInt(gridSizeString[1]));
+
+		String[] ironManLocationString = parts[1].split(",");
+		String[] thanosLocationString = parts[2].split(",");
+
+		String[] stonesIndicies = parts[3].split(",");
+		ArrayList<Pair<Integer, Integer>> remainingStones = new ArrayList<>();
+
+		for (int i = 0; i < stonesIndicies.length - 1; i += 2) {
+			Pair<Integer, Integer> stone = new Pair<Integer, Integer>(Integer.parseInt(stonesIndicies[i]),
+					Integer.parseInt(stonesIndicies[i + 1]));
+			remainingStones.add(stone);
+		}
+
+		String[] warriorsIndicies = parts[4].split(",");
+		ArrayList<Pair<Integer, Integer>> warriorsLocations = new ArrayList<>();
+
+		for (int i = 0; i < warriorsIndicies.length - 1; i += 2) {
+			Pair<Integer, Integer> warrior = new Pair<Integer, Integer>(Integer.parseInt(warriorsIndicies[i]),
+					Integer.parseInt(warriorsIndicies[i + 1]));
+			warriorsLocations.add(warrior);
+		}
+
+		thanosPosition = new Pair<Integer, Integer>(Integer.parseInt(thanosLocationString[0]),
+				Integer.parseInt(thanosLocationString[1]));
+
+		Pair<Integer, Integer> position = new Pair<Integer, Integer>(Integer.parseInt(ironManLocationString[0]),
+				Integer.parseInt(ironManLocationString[1]));
+
+		State state = new State(position, thanosPosition, remainingStones, 100);
+
+		return state;
 
 	}
 
-	@Override
 	public Boolean goalTest(State state) {
 		Boolean condition = state.remainingHealth > 0 && state.position.getValue0() == thanosPosition.getValue0()
 				&& state.position.getValue1() == thanosPosition.getValue1() && state.remainingStones.size() == 0;
 		return condition;
 	}
 
-	@Override
 	public State transitionFunction(State state, Operators operator) {
 
 		State newState = new State();
@@ -52,11 +92,13 @@ public class EndGame extends GenericSearchProblem {
 		case RIGHT:
 			newState.position.setAt1(state.position.getValue1() - 1);
 			break;
+		default:
+			break;
 		}
 		return newState;
 	}
 
-	public SearchTreeNode figure() {
+	public SearchTreeNode search() {
 		while (!nodes.isEmpty()) {
 			SearchTreeNode node = nodes.remove();
 			if (goalTest(node.state))
@@ -65,6 +107,25 @@ public class EndGame extends GenericSearchProblem {
 		}
 
 		return null;
+	}
+
+	public SearchTreeNode figure() {
+		switch (strategy) {
+		case BF:
+			return new BreadthFirst().search(null);
+		case DF:
+			return new DepthFirst().search(null);
+		case ID:
+			// TODO
+		case UC:
+			// TODO
+		case ASi:
+			// TODO
+		case GRi:
+			// TODO
+		default:
+			return null;
+		}
 	}
 
 }

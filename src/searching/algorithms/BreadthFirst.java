@@ -13,10 +13,10 @@ public class BreadthFirst implements SearchingAlgorithm {
 	}
 
 	@Override
-	public void search(SearchTreeNode node) {
+	public SearchTreeNode search(SearchTreeNode node) {
 		State nodeState = node.getState();
-		
-		
+		return node;
+
 	}
 
 }

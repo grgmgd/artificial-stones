@@ -16,13 +16,7 @@ public abstract class GenericSearchProblem {
 		nodes = new LinkedList<SearchTreeNode>();
 	}
 
-	public abstract SearchTreeNode initialState();
-
-	public abstract Boolean goalTest(State state);
-
-	public State transitionFunction(State state, Operators operator) {
+	public State initialState(String problem) {
 		return new State();
 	}
-
-
 }

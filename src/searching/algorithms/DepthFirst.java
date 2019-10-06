@@ -7,9 +7,10 @@ import app.SearchTreeNode;
 public class DepthFirst implements SearchingAlgorithm {
 
 	@Override
-	public void search(SearchTreeNode node) {
+	public SearchTreeNode search(SearchTreeNode node) {
+		return node;
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
