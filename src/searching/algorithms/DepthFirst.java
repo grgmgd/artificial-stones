@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import app.SearchTreeNode;
 
-public class DepthFirst implements SearchingAlgorithm {
+public class DepthFirst implements GeneralSearch {
 
 	@Override
 	public void enqueue(LinkedList<SearchTreeNode> nodes, SearchTreeNode node, SearchTreeNode[] expansionList) {

@@ -1,8 +1,7 @@
 package app;
 
-import java.util.ArrayList;
-
 import searching.algorithms.SearchingAlgorithms;
+import searching.algorithms.GeneralSearch;;
 
 public class Main {
 
@@ -21,17 +20,20 @@ public class Main {
 	 *         nodes in format: plan;cost;nodes
 	 */
 	public static String solve(String grid, SearchingAlgorithms strategy, Boolean visualize) {
-		EndGame endGame = new EndGame(grid, strategy);
-		SearchTreeNode endGameSolutionNode = endGame.figure();
-		Solution solution = new Solution("", 0, new ArrayList<SearchTreeNode>());
-		solution = endGameSolutionNode.getSolution(solution);
-		String plan = solution.getPlan();
-		if (plan.length() == 0)
-			return "There is no solution";
-		if (visualize) {
-			// TODO: run the visualization module
-		}
-		return solution.toString();
+		EndGame endGame = new EndGame(grid);
+		GeneralSearch generalSearch = new GeneralSearch(endGame, strategy);
+
+		// SearchTreeNode endGameSolutionNode = endGame.figure();
+		// Solution solution = new Solution("", 0, new ArrayList<SearchTreeNode>());
+		// solution = endGameSolutionNode.getSolution(solution);
+
+		// String plan = solution.getPlan();
+		// if (plan.length() == 0)
+		// return "There is no solution";
+		// if (visualize) {
+		// // TODO: run the visualization module
+		// }
+		return null;
 	}
 
 	public static void main(String[] args) throws Exception {
