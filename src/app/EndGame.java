@@ -19,13 +19,12 @@ public class EndGame extends GenericSearchProblem {
 
 	Pair<Integer, Integer> gridSize;
 	Pair<Integer, Integer> thanosPosition;
-	LinkedList<SearchTreeNode> nodes;
 	SearchingAlgorithms strategy;
 
 	public EndGame(String problem, SearchingAlgorithms strategy) {
+		super();
 		State state = initialState(problem);
 		SearchTreeNode node = new SearchTreeNode(state, null, null, 0, 0);
-		nodes = new LinkedList<SearchTreeNode>();
 		nodes.add(node);
 		this.strategy = strategy;
 	}
@@ -100,27 +99,28 @@ public class EndGame extends GenericSearchProblem {
 		return newState;
 	}
 
-	public ArrayList<SearchTreeNode> expand(SearchTreeNode node) {
+	public SearchTreeNode[] expand(SearchTreeNode node) {
 		State currentState = node.getState();
 		int currentCost = node.getCost();
 		int currentDepth = node.getDepth();
 		Operators[] operators = Operators.values();
-		ArrayList<SearchTreeNode> expansionList = new ArrayList<SearchTreeNode>();
+		SearchTreeNode[] expansionList = new SearchTreeNode[operators.length];
+		int index = 0;
 		for (Operators opr : operators) {
 			State state = transitionFunction(currentState, opr);
 			if (state == null)
 				continue;
-			expansionList.add(new SearchTreeNode(state, node, opr, currentCost, currentDepth + 1));
+			expansionList[index] = new SearchTreeNode(state, node, opr, currentCost, currentDepth + 1);
 		}
 		return expansionList;
 	}
 
 	public SearchTreeNode search(SearchingAlgorithm searchAlgorithm) {
 		while (!nodes.isEmpty()) {
-			SearchTreeNode node = nodes.remove();
+			SearchTreeNode node = nodes.removeFirst();
 			if (goalTest(node.state))
 				return node;
-			ArrayList<SearchTreeNode> expansionList = expand(node);
+			SearchTreeNode[] expansionList = expand(node);
 			searchAlgorithm.enqueue(nodes, node, expansionList);
 		}
 
@@ -128,20 +128,26 @@ public class EndGame extends GenericSearchProblem {
 	}
 
 	public SearchTreeNode figure() {
-		SearchingAlgorithm searchAlgorithm;
+		SearchingAlgorithm searchAlgorithm = null;
 		switch (strategy) {
 		case BF:
 			searchAlgorithm = new BreadthFirst();
+			break;
 		case DF:
 			searchAlgorithm = new DepthFirst();
+			break;
 		case ID:
 			// TODO
+			break;
 		case UC:
 			// TODO
+			break;
 		case ASi:
 			// TODO
+			break;
 		case GRi:
 			// TODO
+			break;
 		default:
 			searchAlgorithm = new BreadthFirst();
 		}

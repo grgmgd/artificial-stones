@@ -1,6 +1,5 @@
 package searching.algorithms;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import app.SearchTreeNode;
@@ -8,12 +7,11 @@ import app.SearchTreeNode;
 public class BreadthFirst implements SearchingAlgorithm {
 
 	@Override
-	public void enqueue(LinkedList<SearchTreeNode> nodes, SearchTreeNode node,
-			ArrayList<SearchTreeNode> expansionList) {
+	public void enqueue(LinkedList<SearchTreeNode> nodes, SearchTreeNode node, SearchTreeNode[] expansionList) {
 		for (SearchTreeNode searchTreeNode : expansionList) {
-			nodes.addLast(searchTreeNode);
+			if (searchTreeNode != null)
+				nodes.addLast(searchTreeNode);
 		}
-
 	}
 
 }
