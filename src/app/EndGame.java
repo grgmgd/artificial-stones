@@ -8,6 +8,7 @@ import org.javatuples.Pair;
 
 import searching.algorithms.BreadthFirst;
 import searching.algorithms.DepthFirst;
+import searching.algorithms.SearchingAlgorithm;
 import searching.algorithms.SearchingAlgorithms;
 
 /**
@@ -76,9 +77,7 @@ public class EndGame extends GenericSearchProblem {
 	}
 
 	public State transitionFunction(State state, Operators operator) {
-
 		State newState = new State();
-
 		switch (operator) {
 		case UP:
 			newState.position.setAt1(state.position.getValue0() + 1);
@@ -92,29 +91,49 @@ public class EndGame extends GenericSearchProblem {
 		case RIGHT:
 			newState.position.setAt1(state.position.getValue1() - 1);
 			break;
+		case COLLECT:
+		case KILL:
+		case SNAP:
 		default:
 			break;
 		}
 		return newState;
 	}
 
-	public SearchTreeNode search() {
+	public ArrayList<SearchTreeNode> expand(SearchTreeNode node) {
+		State currentState = node.getState();
+		int currentCost = node.getCost();
+		int currentDepth = node.getDepth();
+		Operators[] operators = Operators.values();
+		ArrayList<SearchTreeNode> expansionList = new ArrayList<SearchTreeNode>();
+		for (Operators opr : operators) {
+			State state = transitionFunction(currentState, opr);
+			if (state == null)
+				continue;
+			expansionList.add(new SearchTreeNode(state, node, opr, currentCost, currentDepth + 1));
+		}
+		return expansionList;
+	}
+
+	public SearchTreeNode search(SearchingAlgorithm searchAlgorithm) {
 		while (!nodes.isEmpty()) {
 			SearchTreeNode node = nodes.remove();
 			if (goalTest(node.state))
 				return node;
-			// TODO: call Qing-function and append the new nodes
+			ArrayList<SearchTreeNode> expansionList = expand(node);
+			searchAlgorithm.enqueue(nodes, node, expansionList);
 		}
 
 		return null;
 	}
 
 	public SearchTreeNode figure() {
+		SearchingAlgorithm searchAlgorithm;
 		switch (strategy) {
 		case BF:
-			return new BreadthFirst().search(null);
+			searchAlgorithm = new BreadthFirst();
 		case DF:
-			return new DepthFirst().search(null);
+			searchAlgorithm = new DepthFirst();
 		case ID:
 			// TODO
 		case UC:
@@ -124,8 +143,9 @@ public class EndGame extends GenericSearchProblem {
 		case GRi:
 			// TODO
 		default:
-			return null;
+			searchAlgorithm = new BreadthFirst();
 		}
+		return search(searchAlgorithm);
 	}
 
 }

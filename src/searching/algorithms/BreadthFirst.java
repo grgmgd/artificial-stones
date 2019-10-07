@@ -1,21 +1,18 @@
 package searching.algorithms;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import app.SearchTreeNode;
-import app.State;
 
 public class BreadthFirst implements SearchingAlgorithm {
 
-	public LinkedList<SearchTreeNode> enqueue(SearchTreeNode node) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
-	public SearchTreeNode search(SearchTreeNode node) {
-		State nodeState = node.getState();
-		return node;
+	public void enqueue(LinkedList<SearchTreeNode> nodes, SearchTreeNode node,
+			ArrayList<SearchTreeNode> expansionList) {
+		for (SearchTreeNode searchTreeNode : expansionList) {
+			nodes.addLast(searchTreeNode);
+		}
 
 	}
 

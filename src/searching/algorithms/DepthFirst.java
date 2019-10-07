@@ -1,5 +1,6 @@
 package searching.algorithms;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import app.SearchTreeNode;
@@ -7,16 +8,12 @@ import app.SearchTreeNode;
 public class DepthFirst implements SearchingAlgorithm {
 
 	@Override
-	public SearchTreeNode search(SearchTreeNode node) {
-		return node;
+	public void enqueue(LinkedList<SearchTreeNode> nodes, SearchTreeNode node,
+			ArrayList<SearchTreeNode> expansionList) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
-	@Override
-	public LinkedList<SearchTreeNode> enqueue(SearchTreeNode node) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 }
