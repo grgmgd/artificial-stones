@@ -37,8 +37,8 @@ public class Solution {
 		this.nodes = nodes;
 	}
 
-	public void addPlan(String p) {
-		plan += plan.length() > 0 ? ", " + p : p;
+	public void addPlan(Operators leadingOperator) {
+		plan += plan.length() > 0 ? ", " + leadingOperator : leadingOperator;
 	}
 
 	public void addCost(int c) {

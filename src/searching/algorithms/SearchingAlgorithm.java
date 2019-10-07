@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import app.SearchTreeNode;
 
 public interface SearchingAlgorithm {
-	public SearchTreeNode search(SearchTreeNode node);
+	public void enqueue(LinkedList<SearchTreeNode> nodes, SearchTreeNode node, SearchTreeNode[] expansionList);
 
-	public LinkedList<SearchTreeNode> enqueue(SearchTreeNode node);
 }

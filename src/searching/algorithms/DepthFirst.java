@@ -7,16 +7,12 @@ import app.SearchTreeNode;
 public class DepthFirst implements SearchingAlgorithm {
 
 	@Override
-	public SearchTreeNode search(SearchTreeNode node) {
-		return node;
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public LinkedList<SearchTreeNode> enqueue(SearchTreeNode node) {
-		// TODO Auto-generated method stub
-		return null;
+	public void enqueue(LinkedList<SearchTreeNode> nodes, SearchTreeNode node, SearchTreeNode[] expansionList) {
+		for (int i = expansionList.length - 1; i >= 0; i--) {
+			SearchTreeNode searchTreeNode = expansionList[i];
+			if (searchTreeNode != null)
+				nodes.addFirst(searchTreeNode);
+		}
 	}
 
 }
