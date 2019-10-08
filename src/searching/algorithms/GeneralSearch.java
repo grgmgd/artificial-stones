@@ -22,7 +22,7 @@ public class GeneralSearch {
 	};
 
 	public SearchTreeNode figure() {
-		while (!nodes.isEmpty()) {
+		do {
 			SearchTreeNode node = nodes.remove(0);
 			int nodeDepth = node.getDepth();
 			if (nodeDepth != currentlyHandlingDepth) {
@@ -33,7 +33,7 @@ public class GeneralSearch {
 				return node;
 			SearchTreeNode[] expansionList = expand(node);
 			quing(nodes, node, expansionList);
-		}
+		} while (!nodes.isEmpty());
 		return null;
 	}
 
@@ -93,7 +93,7 @@ public class GeneralSearch {
 	public boolean isARepeatedNode(SearchTreeNode newNode) {
 		State newNodeState = newNode.getState();
 		SearchTreeNode newNodeParent = newNode.getParent();
-		if (newNodeParent != null)
+		if (newNodeState != null && newNodeParent != null)
 			return reccursiveRepeatedStatesTest(newNodeState, newNodeParent);
 		else
 			return false;
@@ -102,7 +102,8 @@ public class GeneralSearch {
 	public boolean reccursiveRepeatedStatesTest(State state, SearchTreeNode node) {
 		State nodeState = node.getState();
 		SearchTreeNode nodeParent = node.getParent();
-		return state.equals(nodeState) || nodeParent != null ? reccursiveRepeatedStatesTest(state, nodeParent) : false;
+		return nodeState != null ? state.equals(nodeState)
+				: false || nodeParent != null ? reccursiveRepeatedStatesTest(state, nodeParent) : false;
 	}
 
 }

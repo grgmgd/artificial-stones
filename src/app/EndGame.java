@@ -11,7 +11,6 @@ public class EndGame implements SearchProblem {
 
 	Pair<Integer, Integer> gridSize;
 	Pair<Integer, Integer> thanosPosition;
-	ArrayList<Pair<Integer, Integer>> warriorsLocations;
 	String problem;
 	boolean snapped = false;
 
@@ -21,8 +20,8 @@ public class EndGame implements SearchProblem {
 
 	@Override
 	public State initialState() {
+		ArrayList<Pair<Integer, Integer>> warriorsLocations;
 		String[] parts = problem.split(";");
-
 		String[] gridSizeString = parts[0].split(",");
 		gridSize = new Pair<Integer, Integer>(Integer.parseInt(gridSizeString[0]), Integer.parseInt(gridSizeString[1]));
 
@@ -53,7 +52,7 @@ public class EndGame implements SearchProblem {
 		Pair<Integer, Integer> position = new Pair<Integer, Integer>(Integer.parseInt(ironManLocationString[0]),
 				Integer.parseInt(ironManLocationString[1]));
 
-		State state = new State(position, remainingStones, 100);
+		State state = new State(position, remainingStones, warriorsLocations, 100);
 
 		return state;
 	}
@@ -65,45 +64,52 @@ public class EndGame implements SearchProblem {
 	}
 
 	public State transitionFunction(State state, Operators operator) {
-		State newState = new State(state.getPosition(), state.getRemainingStones(), state.getRemainingHealth());
+		State newState = new State(state.getPosition(), state.getRemainingStones(), state.getWarriorsLocations(),
+				state.getRemainingHealth());
 		switch (operator) {
 		case UP: {
-			Pair<Integer, Integer> newMovement = new Pair<Integer, Integer>(newState.getPosition().getValue0() + 1,
-					newState.getPosition().getValue1());
-			if (allowedMove(newMovement, newState))
-				newState.translateX(1);
-			else
+			newState.moveUp();
+			Pair<Integer, Integer> newMovement = newState.getPosition();
+			if (allowedMove(newMovement, newState)) {
+				int healthDecreased = getHealthDecreasingAmount(newState);
+				newState.decrementHealth(healthDecreased);
+			} else
 				return null;
 			break;
 		}
 		case DOWN: {
-			Pair<Integer, Integer> newMovement = new Pair<Integer, Integer>(newState.getPosition().getValue0() - 1,
-					newState.getPosition().getValue1());
-			if (allowedMove(newMovement, newState))
-				newState.translateX(-1);
-			else
+			newState.moveDown();
+			Pair<Integer, Integer> newMovement = newState.getPosition();
+			if (allowedMove(newMovement, newState)) {
+				int healthDecreased = getHealthDecreasingAmount(newState);
+				newState.decrementHealth(healthDecreased);
+			} else
 				return null;
 			break;
 		}
 		case LEFT: {
-			Pair<Integer, Integer> newMovement = new Pair<Integer, Integer>(newState.getPosition().getValue0(),
-					newState.getPosition().getValue1() + 1);
-			if (allowedMove(newMovement, newState))
-				newState.translateY(1);
-			else
+			newState.moveLeft();
+			Pair<Integer, Integer> newMovement = newState.getPosition();
+			if (allowedMove(newMovement, newState)) {
+				int healthDecreased = getHealthDecreasingAmount(newState);
+				newState.decrementHealth(healthDecreased);
+			} else
 				return null;
 			break;
 		}
 		case RIGHT: {
-			Pair<Integer, Integer> newMovement = new Pair<Integer, Integer>(newState.getPosition().getValue0(),
-					newState.getPosition().getValue1() - 1);
-			if (allowedMove(newMovement, newState))
-				newState.translateY(-1);
-			else
+			newState.moveRight();
+			Pair<Integer, Integer> newMovement = newState.getPosition();
+			if (allowedMove(newMovement, newState)) {
+				int healthDecreased = getHealthDecreasingAmount(newState);
+				newState.decrementHealth(healthDecreased);
+			} else
 				return null;
 			break;
 		}
 		case COLLECT: {
+			int healthDecreased = getHealthDecreasingAmount(newState);
+			newState.decrementHealth(healthDecreased);
 			ArrayList<Pair<Integer, Integer>> stones = newState.getRemainingStones();
 			for (int i = 0; i < stones.size(); i++) {
 				if (newState.getPosition().equals(stones.get(i))) {
@@ -137,16 +143,42 @@ public class EndGame implements SearchProblem {
 	}
 
 	public boolean allowedMove(Pair<Integer, Integer> movement, State state) {
+		ArrayList<Pair<Integer, Integer>> warriorsLocations = state.getWarriorsLocations();
 		boolean xAllowed = movement.getValue0() != -1 && movement.getValue0() != gridSize.getValue0();
 		boolean yAllowed = movement.getValue1() != -1 && movement.getValue1() != gridSize.getValue1();
 		if (xAllowed && yAllowed) {
-			boolean thanosOverlapAllowed = thanosPosition.equals(movement) && state.getRemainingStones().size() == 0;
+			boolean thanosOverlapAllowed = !thanosPosition.equals(movement) || state.getRemainingStones().size() == 0;
 			boolean warriorOverlapAllowed = !warriorsLocations.contains(movement);
 			return warriorOverlapAllowed && thanosOverlapAllowed;
 		}
 		return false;
 	}
-	
 
+	public int getHealthDecreasingAmount(State state) {
+		int healthAmount = 0;
+		ArrayList<Pair<Integer, Integer>> warriorsLocations = state.getWarriorsLocations();
+		Pair<Integer, Integer> position = state.getPosition();
+		if (isAdjacent(position, thanosPosition))
+			healthAmount += 5;
+
+		for (Pair<Integer, Integer> warriorPosition : warriorsLocations)
+			if (isAdjacent(position, warriorPosition))
+				healthAmount += 1;
+
+		return healthAmount;
+
+	}
+
+	public boolean isAdjacent(Pair<Integer, Integer> self, Pair<Integer, Integer> other) {
+		int xSelfLoc = self.getValue0();
+		int ySelfLoc = self.getValue1();
+		int xOtherLoc = other.getValue0();
+		int yOtherLoc = other.getValue1();
+		boolean right = xSelfLoc == xOtherLoc - 1 && ySelfLoc == yOtherLoc;
+		boolean left = xSelfLoc == xOtherLoc + 1 && ySelfLoc == yOtherLoc;
+		boolean up = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc - 1;
+		boolean down = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc + 1;
+		return right || left || up || down;
+	}
 
 }

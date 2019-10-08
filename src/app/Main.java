@@ -26,15 +26,18 @@ public class Main {
 		EndGame endGame = new EndGame(grid);
 		GeneralSearch generalSearch = new GeneralSearch(endGame, strategy);
 		SearchTreeNode endGameSolutionNode = generalSearch.figure();
-		Solution solution = new Solution("", 0, new ArrayList<SearchTreeNode>());
-		solution = endGameSolutionNode.getSolution(solution);
-		String plan = solution.getPlan();
-		if (plan.length() == 0)
-			return "There is no solution";
-		if (visualize) {
-			// TODO: run the visualization module
+		if (endGameSolutionNode != null) {
+			Solution solution = new Solution("", 0, new ArrayList<SearchTreeNode>());
+			solution = endGameSolutionNode.getSolution(solution);
+			String plan = solution.getPlan();
+			if (plan.length() == 0)
+				return "There is no solution";
+			if (visualize) {
+				// TODO: run the visualization module
+			}
+			return plan;
 		}
-		return plan;
+		return "There is no solution";
 	}
 
 	public static void main(String[] args) throws Exception {
