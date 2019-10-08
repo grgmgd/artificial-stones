@@ -76,11 +76,11 @@ public class State {
 	}
 
 	public void moveRight() {
-		translateY(-1);
+		translateY(1);
 	}
 
 	public void moveLeft() {
-		translateY(1);
+		translateY(-1);
 	}
 
 	public boolean isSnapped() {
@@ -96,7 +96,20 @@ public class State {
 		State otherState = (State) obj;
 		return position.equals(otherState.getPosition()) && remainingHealth == otherState.remainingHealth
 				&& remainingStones.equals(otherState.getRemainingStones())
-				&& warriorsLocations.equals(otherState.getWarriorsLocations());
+				&& warriorsLocations.equals(otherState.getWarriorsLocations()) && snapped == otherState.isSnapped();
+	}
+
+	@Override
+	protected State clone() throws CloneNotSupportedException {
+		Pair<Integer, Integer> position = new Pair<Integer, Integer>(getPosition().getValue0(),
+				getPosition().getValue1());
+		ArrayList<Pair<Integer, Integer>> remainingStones = (ArrayList<Pair<Integer, Integer>>) getRemainingStones()
+				.clone();
+		ArrayList<Pair<Integer, Integer>> warriorsLocations = (ArrayList<Pair<Integer, Integer>>) getWarriorsLocations()
+				.clone();
+		int remainingHealth = getRemainingHealth();
+		State newState = new State(position, remainingStones, warriorsLocations, remainingHealth);
+		return newState;
 	}
 
 }

@@ -27,8 +27,10 @@ public class GeneralSearch {
 			int nodeDepth = node.getDepth();
 			if (nodeDepth != currentlyHandlingDepth) {
 				currentlyHandlingDepth = nodeDepth;
+				System.out.println("Nodes count:" + nodes.size());
 				System.out.println("Reached depth " + currentlyHandlingDepth);
 			}
+
 			if (problem.goalTest(node.state))
 				return node;
 			SearchTreeNode[] expansionList = expand(node);
@@ -46,10 +48,9 @@ public class GeneralSearch {
 		int index = 0;
 		for (Operators opr : operators) {
 			State state = problem.transitionFunction(currentState, opr);
-			SearchTreeNode expansionNode;
 			if (state == null)
 				continue;
-			expansionNode = new SearchTreeNode(state, node, opr, currentCost, currentDepth + 1);
+			SearchTreeNode expansionNode = new SearchTreeNode(state, node, opr, currentCost, currentDepth + 1);
 			if (!isARepeatedNode(expansionNode)) {
 				expansionList[index] = new SearchTreeNode(state, node, opr, currentCost, currentDepth + 1);
 				index++;

@@ -1,5 +1,6 @@
 package app;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import org.javatuples.Pair;
 
@@ -12,7 +13,6 @@ public class EndGame implements SearchProblem {
 	Pair<Integer, Integer> gridSize;
 	Pair<Integer, Integer> thanosPosition;
 	String problem;
-	boolean snapped = false;
 
 	public EndGame(String problem) {
 		this.problem = problem;
@@ -65,8 +65,12 @@ public class EndGame implements SearchProblem {
 	}
 
 	public State transitionFunction(State state, Operators operator) {
-		State newState = new State(state.getPosition(), state.getRemainingStones(), state.getWarriorsLocations(),
-				state.getRemainingHealth());
+		State newState = null;
+		try {
+			newState = state.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 		switch (operator) {
 		case UP: {
 			newState.moveUp();
@@ -117,12 +121,17 @@ public class EndGame implements SearchProblem {
 			int healthDecreased = healthReport.computeDamage(false);
 			newState.decrementHealth(healthDecreased);
 			ArrayList<Pair<Integer, Integer>> stones = newState.getRemainingStones();
-			for (int i = 0; i < stones.size(); i++) {
+			boolean validAction = false;
+			for (int i = 0; i < stones.size();) {
 				if (newState.getPosition().equals(stones.get(i))) {
+					validAction |= true;
 					newState.getRemainingStones().remove(i);
 					newState.decrementHealth(3);
-				}
+				} else
+					i++;
 			}
+			if (!validAction)
+				return null;
 			break;
 		}
 		case KILL: {
@@ -131,17 +140,27 @@ public class EndGame implements SearchProblem {
 			newState.decrementHealth(healthDecreased);
 			ArrayList<Pair<Integer, Integer>> warriorsLocations = newState.getWarriorsLocations();
 			Pair<Integer, Integer> self = newState.getPosition();
+			boolean validAction = false;
 			for (int i = 0; i < warriorsLocations.size();) {
 				Pair<Integer, Integer> warriorLocation = warriorsLocations.get(i);
-				if (isAdjacent(self, warriorLocation))
-					warriorsLocations.remove(warriorLocation);
-				else
+				if (isAdjacent(self, warriorLocation)) {
+					warriorsLocations.remove(i);
+					validAction |= true;
+				} else
 					i++;
 			}
+			if (!validAction)
+				return null;
 			break;
 		}
 		case SNAP: {
-			newState.setSnapped(true);
+			Pair<Integer, Integer> position = newState.getPosition();
+			ArrayList<Pair<Integer, Integer>> remainingStones = newState.getRemainingStones();
+			int remainingHealth = newState.getRemainingHealth();
+			if (position.equals(thanosPosition) && remainingHealth > 0 && remainingStones.size() == 0)
+				newState.setSnapped(true);
+			else
+				return null;
 			break;
 		}
 		default:
@@ -192,8 +211,8 @@ public class EndGame implements SearchProblem {
 		int yOtherLoc = other.getValue1();
 		boolean right = xSelfLoc == xOtherLoc - 1 && ySelfLoc == yOtherLoc;
 		boolean left = xSelfLoc == xOtherLoc + 1 && ySelfLoc == yOtherLoc;
-		boolean up = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc - 1;
-		boolean down = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc + 1;
+		boolean up = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc + 1;
+		boolean down = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc - 1;
 		return right || left || up || down;
 	}
 
