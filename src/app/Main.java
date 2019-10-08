@@ -1,6 +1,9 @@
 package app;
 
 import searching.algorithms.SearchingAlgorithms;
+
+import java.util.ArrayList;
+
 import searching.algorithms.GeneralSearch;;
 
 public class Main {
@@ -22,23 +25,22 @@ public class Main {
 	public static String solve(String grid, SearchingAlgorithms strategy, Boolean visualize) {
 		EndGame endGame = new EndGame(grid);
 		GeneralSearch generalSearch = new GeneralSearch(endGame, strategy);
-
-		// SearchTreeNode endGameSolutionNode = endGame.figure();
-		// Solution solution = new Solution("", 0, new ArrayList<SearchTreeNode>());
-		// solution = endGameSolutionNode.getSolution(solution);
-
-		// String plan = solution.getPlan();
-		// if (plan.length() == 0)
-		// return "There is no solution";
-		// if (visualize) {
-		// // TODO: run the visualization module
-		// }
-		return null;
+		SearchTreeNode endGameSolutionNode = generalSearch.figure();
+		Solution solution = new Solution("", 0, new ArrayList<SearchTreeNode>());
+		solution = endGameSolutionNode.getSolution(solution);
+		String plan = solution.getPlan();
+		if (plan.length() == 0)
+			return "There is no solution";
+		if (visualize) {
+			// TODO: run the visualization module
+		}
+		return plan;
 	}
 
 	public static void main(String[] args) throws Exception {
 		String grid = "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
 		SearchingAlgorithms strategy = SearchingAlgorithms.BF;
-		solve(grid, strategy, true);
+		String solution = solve(grid, strategy, true);
+		System.out.println(solution);
 	}
 }

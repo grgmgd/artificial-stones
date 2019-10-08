@@ -13,6 +13,7 @@ public class EndGame implements SearchProblem {
 	Pair<Integer, Integer> thanosPosition;
 	ArrayList<Pair<Integer, Integer>> warriorsLocations;
 	String problem;
+	boolean snapped = false;
 
 	public EndGame(String problem) {
 		this.problem = problem;
@@ -67,25 +68,41 @@ public class EndGame implements SearchProblem {
 		State newState = new State(state.getPosition(), state.getRemainingStones(), state.getRemainingHealth());
 		switch (operator) {
 		case UP: {
-			if (newState.getPosition().getValue0() + 1 != gridSize.getValue0())
+			Pair<Integer, Integer> newMovement = new Pair<Integer, Integer>(newState.getPosition().getValue0() + 1,
+					newState.getPosition().getValue1());
+			if (allowedMove(newMovement, newState))
 				newState.translateX(1);
-		}
+			else
+				return null;
 			break;
+		}
 		case DOWN: {
-			if (newState.getPosition().getValue0() - 1 != 0)
+			Pair<Integer, Integer> newMovement = new Pair<Integer, Integer>(newState.getPosition().getValue0() - 1,
+					newState.getPosition().getValue1());
+			if (allowedMove(newMovement, newState))
 				newState.translateX(-1);
-		}
+			else
+				return null;
 			break;
+		}
 		case LEFT: {
-			if (newState.getPosition().getValue1() + 1 != gridSize.getValue1())
+			Pair<Integer, Integer> newMovement = new Pair<Integer, Integer>(newState.getPosition().getValue0(),
+					newState.getPosition().getValue1() + 1);
+			if (allowedMove(newMovement, newState))
 				newState.translateY(1);
-		}
+			else
+				return null;
 			break;
+		}
 		case RIGHT: {
-			if (newState.getPosition().getValue1() - 1 != 0)
+			Pair<Integer, Integer> newMovement = new Pair<Integer, Integer>(newState.getPosition().getValue0(),
+					newState.getPosition().getValue1() - 1);
+			if (allowedMove(newMovement, newState))
 				newState.translateY(-1);
-		}
+			else
+				return null;
 			break;
+		}
 		case COLLECT: {
 			ArrayList<Pair<Integer, Integer>> stones = newState.getRemainingStones();
 			for (int i = 0; i < stones.size(); i++) {
@@ -94,19 +111,22 @@ public class EndGame implements SearchProblem {
 					newState.decrementHealth(3);
 				}
 			}
-		}
 			break;
+		}
 		case KILL: {
 
-		}
 			break;
+		}
 		case SNAP: {
 
-		}
 			break;
+		}
 		default:
 			break;
 		}
+		int newStateRemainingHealth = newState.getRemainingHealth();
+		if (newStateRemainingHealth == 0)
+			return null;
 		return newState;
 	}
 
@@ -116,60 +136,17 @@ public class EndGame implements SearchProblem {
 		return 0;
 	}
 
-	// public SearchTreeNode[] expand(SearchTreeNode node) {
-	// State currentState = node.getState();
-	// int currentCost = node.getCost();
-	// int currentDepth = node.getDepth();
-	// Operators[] operators = Operators.values();
-	// SearchTreeNode[] expansionList = new SearchTreeNode[operators.length];
-	// int index = 0;
-	// for (Operators opr : operators) {
-	// State state = transitionFunction(currentState, opr);
-	// if (state == null)
-	// continue;
-	// expansionList[index] = new SearchTreeNode(state, node, opr, currentCost,
-	// currentDepth + 1);
-	// }
-	// return expansionList;
-	// }
+	public boolean allowedMove(Pair<Integer, Integer> movement, State state) {
+		boolean xAllowed = movement.getValue0() != -1 && movement.getValue0() != gridSize.getValue0();
+		boolean yAllowed = movement.getValue1() != -1 && movement.getValue1() != gridSize.getValue1();
+		if (xAllowed && yAllowed) {
+			boolean thanosOverlapAllowed = thanosPosition.equals(movement) && state.getRemainingStones().size() == 0;
+			boolean warriorOverlapAllowed = !warriorsLocations.contains(movement);
+			return warriorOverlapAllowed && thanosOverlapAllowed;
+		}
+		return false;
+	}
+	
 
-	// public SearchTreeNode search(SearchingAlgorithm searchAlgorithm) {
-	// while (!nodes.isEmpty()) {
-	// SearchTreeNode node = nodes.removeFirst();
-	// if (goalTest(node.state))
-	// return node;
-	// SearchTreeNode[] expansionList = expand(node);
-	// searchAlgorithm.enqueue(nodes, node, expansionList);
-	// }
-
-	// return null;
-	// }
-
-	// public SearchTreeNode figure() {
-	// SearchingAlgorithm searchAlgorithm = null;
-	// switch (strategy) {
-	// case BF:
-	// searchAlgorithm = new BreadthFirst();
-	// break;
-	// case DF:
-	// searchAlgorithm = new DepthFirst();
-	// break;
-	// case ID:
-	// // TODO
-	// break;
-	// case UC:
-	// // TODO
-	// break;
-	// case ASi:
-	// // TODO
-	// break;
-	// case GRi:
-	// // TODO
-	// break;
-	// default:
-	// searchAlgorithm = new BreadthFirst();
-	// }
-	// return search(searchAlgorithm);
-	// }
 
 }

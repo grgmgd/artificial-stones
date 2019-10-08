@@ -53,4 +53,11 @@ public class State {
 	public void decrementHealth(int value) {
 		remainingHealth -= value;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		State otherState = (State) obj;
+		return position.equals(otherState.getPosition()) && remainingHealth == otherState.remainingHealth
+				&& remainingStones.equals(otherState.getRemainingStones());
+	}
 }

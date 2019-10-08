@@ -47,4 +47,9 @@ public class SearchTreeNode {
 			return getParent().getSolution(solution);
 		return solution;
 	}
+
+	@Override
+	public String toString() {
+		return "(" + leadingOperator + ") at depth: " + depth;
+	}
 }
