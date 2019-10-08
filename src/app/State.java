@@ -11,6 +11,7 @@ public class State {
 	public ArrayList<Pair<Integer, Integer>> remainingStones;
 	ArrayList<Pair<Integer, Integer>> warriorsLocations;
 	public int remainingHealth;
+	public boolean snapped;
 
 	/**
 	 * The method uses search to try to formulate a winning plan with the
@@ -31,6 +32,7 @@ public class State {
 		this.remainingStones = remainingStones;
 		this.warriorsLocations = warriorsLocations;
 		this.remainingHealth = remainingHealth;
+		this.snapped = false;
 	}
 
 	public Pair<Integer, Integer> getPosition() {
@@ -66,19 +68,27 @@ public class State {
 	}
 
 	public void moveUp() {
-		translateX(1);
-	}
-
-	public void moveDown() {
 		translateX(-1);
 	}
 
+	public void moveDown() {
+		translateX(1);
+	}
+
 	public void moveRight() {
-		translateY(1);
+		translateY(-1);
 	}
 
 	public void moveLeft() {
-		translateY(-1);
+		translateY(1);
+	}
+
+	public boolean isSnapped() {
+		return snapped;
+	}
+
+	public void setSnapped(boolean snapped) {
+		this.snapped = snapped;
 	}
 
 	@Override

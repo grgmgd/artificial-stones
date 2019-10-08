@@ -58,7 +58,8 @@ public class EndGame implements SearchProblem {
 	}
 
 	public Boolean goalTest(State state) {
-		Boolean condition = state.remainingHealth > 0 && state.position.getValue0() == thanosPosition.getValue0()
+		Boolean condition = state.isSnapped() && state.remainingHealth > 0
+				&& state.position.getValue0() == thanosPosition.getValue0()
 				&& state.position.getValue1() == thanosPosition.getValue1() && state.remainingStones.size() == 0;
 		return condition;
 	}
@@ -71,7 +72,8 @@ public class EndGame implements SearchProblem {
 			newState.moveUp();
 			Pair<Integer, Integer> newMovement = newState.getPosition();
 			if (allowedMove(newMovement, newState)) {
-				int healthDecreased = getHealthDecreasingAmount(newState);
+				HealthReport healthReport = getHealthDecreasingAmount(newState);
+				int healthDecreased = healthReport.computeDamage(false);
 				newState.decrementHealth(healthDecreased);
 			} else
 				return null;
@@ -81,7 +83,8 @@ public class EndGame implements SearchProblem {
 			newState.moveDown();
 			Pair<Integer, Integer> newMovement = newState.getPosition();
 			if (allowedMove(newMovement, newState)) {
-				int healthDecreased = getHealthDecreasingAmount(newState);
+				HealthReport healthReport = getHealthDecreasingAmount(newState);
+				int healthDecreased = healthReport.computeDamage(false);
 				newState.decrementHealth(healthDecreased);
 			} else
 				return null;
@@ -91,7 +94,8 @@ public class EndGame implements SearchProblem {
 			newState.moveLeft();
 			Pair<Integer, Integer> newMovement = newState.getPosition();
 			if (allowedMove(newMovement, newState)) {
-				int healthDecreased = getHealthDecreasingAmount(newState);
+				HealthReport healthReport = getHealthDecreasingAmount(newState);
+				int healthDecreased = healthReport.computeDamage(false);
 				newState.decrementHealth(healthDecreased);
 			} else
 				return null;
@@ -101,14 +105,16 @@ public class EndGame implements SearchProblem {
 			newState.moveRight();
 			Pair<Integer, Integer> newMovement = newState.getPosition();
 			if (allowedMove(newMovement, newState)) {
-				int healthDecreased = getHealthDecreasingAmount(newState);
+				HealthReport healthReport = getHealthDecreasingAmount(newState);
+				int healthDecreased = healthReport.computeDamage(false);
 				newState.decrementHealth(healthDecreased);
 			} else
 				return null;
 			break;
 		}
 		case COLLECT: {
-			int healthDecreased = getHealthDecreasingAmount(newState);
+			HealthReport healthReport = getHealthDecreasingAmount(newState);
+			int healthDecreased = healthReport.computeDamage(false);
 			newState.decrementHealth(healthDecreased);
 			ArrayList<Pair<Integer, Integer>> stones = newState.getRemainingStones();
 			for (int i = 0; i < stones.size(); i++) {
@@ -120,11 +126,22 @@ public class EndGame implements SearchProblem {
 			break;
 		}
 		case KILL: {
-
+			HealthReport healthReport = getHealthDecreasingAmount(newState);
+			int healthDecreased = healthReport.computeDamage(true);
+			newState.decrementHealth(healthDecreased);
+			ArrayList<Pair<Integer, Integer>> warriorsLocations = newState.getWarriorsLocations();
+			Pair<Integer, Integer> self = newState.getPosition();
+			for (int i = 0; i < warriorsLocations.size();) {
+				Pair<Integer, Integer> warriorLocation = warriorsLocations.get(i);
+				if (isAdjacent(self, warriorLocation))
+					warriorsLocations.remove(warriorLocation);
+				else
+					i++;
+			}
 			break;
 		}
 		case SNAP: {
-
+			newState.setSnapped(true);
 			break;
 		}
 		default:
@@ -154,19 +171,18 @@ public class EndGame implements SearchProblem {
 		return false;
 	}
 
-	public int getHealthDecreasingAmount(State state) {
-		int healthAmount = 0;
+	public HealthReport getHealthDecreasingAmount(State state) {
+		int warriorsHit = 0;
+		boolean thanosHit = false;
 		ArrayList<Pair<Integer, Integer>> warriorsLocations = state.getWarriorsLocations();
 		Pair<Integer, Integer> position = state.getPosition();
 		if (isAdjacent(position, thanosPosition))
-			healthAmount += 5;
+			thanosHit = true;
 
 		for (Pair<Integer, Integer> warriorPosition : warriorsLocations)
 			if (isAdjacent(position, warriorPosition))
-				healthAmount += 1;
-
-		return healthAmount;
-
+				warriorsHit += 1;
+		return new HealthReport(thanosHit, warriorsHit);
 	}
 
 	public boolean isAdjacent(Pair<Integer, Integer> self, Pair<Integer, Integer> other) {
