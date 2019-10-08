@@ -52,7 +52,7 @@ public class GeneralSearch {
 				continue;
 			SearchTreeNode expansionNode = new SearchTreeNode(state, node, opr, currentCost, currentDepth + 1);
 			if (!isARepeatedNode(expansionNode)) {
-				expansionList[index] = new SearchTreeNode(state, node, opr, currentCost, currentDepth + 1);
+				expansionList[index] = expansionNode;
 				index++;
 			}
 		}

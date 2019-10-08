@@ -1,5 +1,5 @@
 package app;
 
 public enum Operators {
-    UP, DOWN, LEFT, RIGHT, COLLECT, KILL, SNAP;
+	SNAP, COLLECT, KILL, UP, DOWN, LEFT, RIGHT;
 }

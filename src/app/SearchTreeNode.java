@@ -50,6 +50,6 @@ public class SearchTreeNode {
 
 	@Override
 	public String toString() {
-		return "(" + leadingOperator + ") at depth: " + depth;
+		return "(" + leadingOperator + ") at depth: " + depth + "\nState: " + state;
 	}
 }

@@ -96,7 +96,7 @@ public class State {
 		State otherState = (State) obj;
 		return position.equals(otherState.getPosition()) && remainingHealth == otherState.remainingHealth
 				&& remainingStones.equals(otherState.getRemainingStones())
-				&& warriorsLocations.equals(otherState.getWarriorsLocations()) && snapped == otherState.isSnapped();
+				&& warriorsLocations.equals(otherState.getWarriorsLocations()) && isSnapped() == otherState.isSnapped();
 	}
 
 	@Override
@@ -112,4 +112,9 @@ public class State {
 		return newState;
 	}
 
+	@Override
+	public String toString() {
+		return "\nPosition: " + position + "\nRemaining Stones: " + remainingStones + "\nWarriors Locations: "
+				+ warriorsLocations + "\nRemaining Health: " + remainingHealth + "\nSnapped: " + snapped + "\n";
+	}
 }
