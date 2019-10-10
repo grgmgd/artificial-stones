@@ -1,11 +1,6 @@
 package app;
 
 import searching.algorithms.SearchingAlgorithms;
-
-import java.util.ArrayList;
-
-import org.javatuples.Pair;
-
 import searching.algorithms.GeneralSearch;;
 
 public class Main {
@@ -24,28 +19,29 @@ public class Main {
 	 * @return String representing the formulated plan with a cost and number of
 	 *         nodes in format: plan;cost;nodes
 	 */
+
 	public static String solve(String grid, SearchingAlgorithms strategy, Boolean visualize) {
 		EndGame endGame = new EndGame(grid);
 		GeneralSearch generalSearch = new GeneralSearch(endGame, strategy);
-		SearchTreeNode endGameSolutionNode = generalSearch.figure();
-		if (endGameSolutionNode != null) {
-			Solution solution = new Solution("", 0, new ArrayList<SearchTreeNode>());
-			solution = endGameSolutionNode.getSolution(solution);
-			String plan = solution.getPlan();
-			if (plan.length() == 0)
-				return "There is no solution";
+		String plan = generalSearch.figure();
+
+		if (plan.length() > 0) {
+			int nodes = generalSearch.getNodeCount();
+
 			if (visualize) {
 				// TODO: run the visualization module
 			}
-			return plan;
+
+			return plan + ";" + nodes;
 		}
+
 		return "There is no solution";
 	}
 
 	public static void main(String[] args) throws Exception {
 		String grid = "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
-//		String grid = "3,3;0,0;1,1;0,1,2,0;1,0";
-		SearchingAlgorithms strategy = SearchingAlgorithms.BF;
+		// String grid = "3,3;0,0;1,1;0,1,2,0;1,0";
+		SearchingAlgorithms strategy = SearchingAlgorithms.DF;
 		String solution = solve(grid, strategy, true);
 		System.out.println(solution);
 	}

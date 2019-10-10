@@ -100,6 +100,7 @@ public class State {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected State clone() throws CloneNotSupportedException {
 		Pair<Integer, Integer> position = new Pair<Integer, Integer>(getPosition().getValue0(),
 				getPosition().getValue1());
@@ -114,7 +115,40 @@ public class State {
 
 	@Override
 	public String toString() {
-		return "\nPosition: " + position + "\nRemaining Stones: " + remainingStones + "\nWarriors Locations: "
-				+ warriorsLocations + "\nRemaining Health: " + remainingHealth + "\nSnapped: " + snapped + "\n";
+		return serializePosition() + ";" + serializeStones() + ";" + serializeWarriors() + ";" + serializeSnap();
+	}
+
+	private String serializeSnap() {
+		if (snapped)
+			return "snap";
+		else
+			return "";
+	}
+
+	private String serializePosition() {
+		return position.getValue0() + "," + position.getValue1();
+	}
+
+	private String serializeStones() {
+		String stones = "";
+		for (Pair<Integer, Integer> stone : remainingStones) {
+			stones += stone.getValue0() + "," + stone.getValue1() + ",";
+		}
+
+		if (stones.length() > 0)
+			stones = stones.substring(0, stones.length() - 1);
+
+		return stones;
+	}
+
+	private String serializeWarriors() {
+		String warriors = "";
+		for (Pair<Integer, Integer> warrior : warriorsLocations) {
+			warriors += warrior.getValue0() + "," + warrior.getValue1() + ",";
+		}
+		if (warriors.length() > 0)
+			warriors = warriors.substring(0, warriors.length() - 1);
+
+		return warriors;
 	}
 }

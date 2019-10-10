@@ -1,6 +1,7 @@
 package app;
 
 import java.util.ArrayList;
+
 import org.javatuples.Pair;
 
 /**
@@ -57,68 +58,48 @@ public class EndGame implements SearchProblem {
 	}
 
 	public Boolean goalTest(State state) {
-		Boolean condition = state.isSnapped() && state.remainingHealth > 0
-				&& state.position.getValue0() == thanosPosition.getValue0()
-				&& state.position.getValue1() == thanosPosition.getValue1() && state.remainingStones.size() == 0;
+		Boolean condition = state.isSnapped() && state.remainingHealth > 0;
 		return condition;
 	}
 
-	public State transitionFunction(State state, Operators operator) {
+	public SearchTreeNode transitionFunction(SearchTreeNode node, Operators operator) {
 		State newState = null;
+
 		try {
-			newState = state.clone();
+			newState = node.getState().clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
+
 		switch (operator) {
 		case UP: {
 			newState.moveUp();
 			Pair<Integer, Integer> newMovement = newState.getPosition();
-			if (allowedMove(newMovement, newState)) {
-				HealthReport healthReport = getHealthDecreasingAmount(newState);
-				int healthDecreased = healthReport.computeDamage(false);
-				newState.decrementHealth(healthDecreased);
-			} else
+			if (!allowedMove(newMovement, newState))
 				return null;
 			break;
 		}
 		case DOWN: {
 			newState.moveDown();
 			Pair<Integer, Integer> newMovement = newState.getPosition();
-			if (allowedMove(newMovement, newState)) {
-				HealthReport healthReport = getHealthDecreasingAmount(newState);
-				int healthDecreased = healthReport.computeDamage(false);
-				newState.decrementHealth(healthDecreased);
-			} else
+			if (!allowedMove(newMovement, newState))
 				return null;
 			break;
 		}
 		case LEFT: {
 			newState.moveLeft();
 			Pair<Integer, Integer> newMovement = newState.getPosition();
-			if (allowedMove(newMovement, newState)) {
-				HealthReport healthReport = getHealthDecreasingAmount(newState);
-				int healthDecreased = healthReport.computeDamage(false);
-				newState.decrementHealth(healthDecreased);
-			} else
-				return null;
-			break;
+			if (!allowedMove(newMovement, newState))
+				break;
 		}
 		case RIGHT: {
 			newState.moveRight();
 			Pair<Integer, Integer> newMovement = newState.getPosition();
-			if (allowedMove(newMovement, newState)) {
-				HealthReport healthReport = getHealthDecreasingAmount(newState);
-				int healthDecreased = healthReport.computeDamage(false);
-				newState.decrementHealth(healthDecreased);
-			} else
+			if (!allowedMove(newMovement, newState))
 				return null;
 			break;
 		}
 		case COLLECT: {
-			HealthReport healthReport = getHealthDecreasingAmount(newState);
-			int healthDecreased = healthReport.computeDamage(false);
-			newState.decrementHealth(healthDecreased);
 			ArrayList<Pair<Integer, Integer>> stones = newState.getRemainingStones();
 			boolean validAction = false;
 			for (int i = 0; i < stones.size();) {
@@ -134,9 +115,6 @@ public class EndGame implements SearchProblem {
 			break;
 		}
 		case KILL: {
-			HealthReport healthReport = getHealthDecreasingAmount(newState);
-			int healthDecreased = healthReport.computeDamage(true);
-			newState.decrementHealth(healthDecreased);
 			ArrayList<Pair<Integer, Integer>> warriorsLocations = newState.getWarriorsLocations();
 			Pair<Integer, Integer> self = newState.getPosition();
 			boolean validAction = false;
@@ -166,15 +144,19 @@ public class EndGame implements SearchProblem {
 			break;
 		}
 		int newStateRemainingHealth = newState.getRemainingHealth();
-		if (newStateRemainingHealth == 0)
+		if (newStateRemainingHealth <= 0)
 			return null;
-		return newState;
+		int newCost = pathCost(node.getState(), operator);
+		SearchTreeNode newNode = new SearchTreeNode(newState, node, operator, newCost, node.getDepth() + 1);
+		return newNode;
 	}
 
 	@Override
-	public int pathCost() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int pathCost(State state, Operators operator) {
+		HealthReport healthReport = getHealthDecreasingAmount(state);
+		int healthDecreased = healthReport.computeDamage(operator == Operators.KILL);
+		state.decrementHealth(healthDecreased);
+		return healthDecreased;
 	}
 
 	public boolean allowedMove(Pair<Integer, Integer> movement, State state) {
