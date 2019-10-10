@@ -108,7 +108,7 @@ public class State {
 				.clone();
 		ArrayList<Pair<Integer, Integer>> warriorsLocations = (ArrayList<Pair<Integer, Integer>>) getWarriorsLocations()
 				.clone();
-		int remainingHealth = getRemainingHealth();
+		Integer remainingHealth = new Integer(getRemainingHealth());
 		State newState = new State(position, remainingStones, warriorsLocations, remainingHealth);
 		return newState;
 	}
