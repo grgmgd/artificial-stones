@@ -1,10 +1,25 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+
 import org.javatuples.Pair;
 
-/**
- * EndGame
+/***
+ * EndGame is the SearchProblem instance in which our problem is defined. This
+ * class contains all the main tools that will contribute in the problem
+ * solution.
+ * 
+ * @param gridSize       contains the <A, B> indicating the grid size of A x B.
+ * @param thanosPosition <X, Y> indicating where Thanos is located in the grid.
+ * @param problem        the actual problem string; semi-colon seperated string
+ *                       indicating at <br>
+ *                       [0]: grid size,<br>
+ *                       [1]: Iron Man position,<br>
+ *                       [2]: Thanos position,<br>
+ *                       [3]: stones locations,<br>
+ *                       [4]: warriors locations
+ *
  */
 
 public class EndGame implements SearchProblem {
@@ -12,12 +27,20 @@ public class EndGame implements SearchProblem {
 	Pair<Integer, Integer> gridSize;
 	Pair<Integer, Integer> thanosPosition;
 	String problem;
+	public static int scoreRemainingStones = 7;
+	public static Pair<Integer, Integer> furtherPlace = new Pair<Integer, Integer>(0, 0);
+	public Hashtable<Pair<Integer, Integer>, Boolean> stonesTracker;
 
 	public EndGame(String problem) {
 		this.problem = problem;
 	}
 
-	@Override
+	/***
+	 * function responsible for generating the very first state that will be used in
+	 * the only enqueued node once the searching algorithm starts.
+	 * 
+	 * @return the initial state
+	 */
 	public State initialState() {
 		ArrayList<Pair<Integer, Integer>> warriorsLocations;
 		String[] parts = problem.split(";");
@@ -35,7 +58,7 @@ public class EndGame implements SearchProblem {
 					Integer.parseInt(stonesIndicies[i + 1]));
 			remainingStones.add(stone);
 		}
-
+		initiateStonesTracker(remainingStones);
 		String[] warriorsIndicies = parts[4].split(",");
 		warriorsLocations = new ArrayList<>();
 
@@ -56,6 +79,12 @@ public class EndGame implements SearchProblem {
 		return state;
 	}
 
+	/***
+	 * function responsible for declaring whether a certain state is a goal state or
+	 * not.
+	 * 
+	 * @return boolean
+	 */
 	public Boolean goalTest(State state) {
 		Boolean condition = state.isSnapped() && state.remainingHealth > 0
 				&& state.position.getValue0() == thanosPosition.getValue0()
@@ -63,6 +92,17 @@ public class EndGame implements SearchProblem {
 		return condition;
 	}
 
+	/***
+	 * function responsible for computing the new state from an older state given a
+	 * certain operator.<br>
+	 * <blockquote> For each operator, we are defining several constraints in order
+	 * for our agent to be a rational one.<blockquote>
+	 * 
+	 * @param state    the old state
+	 * @param operator the operator taking place and acting upon the old state
+	 * @return null for invalid transition function over the given state.<br>
+	 *         state the new generated state
+	 */
 	public State transitionFunction(State state, Operators operator) {
 		State newState = null;
 		try {
@@ -78,9 +118,9 @@ public class EndGame implements SearchProblem {
 				HealthReport healthReport = getHealthDecreasingAmount(newState);
 				int healthDecreased = healthReport.computeDamage(false);
 				newState.decrementHealth(healthDecreased);
+				break;
 			} else
 				return null;
-			break;
 		}
 		case DOWN: {
 			newState.moveDown();
@@ -89,9 +129,9 @@ public class EndGame implements SearchProblem {
 				HealthReport healthReport = getHealthDecreasingAmount(newState);
 				int healthDecreased = healthReport.computeDamage(false);
 				newState.decrementHealth(healthDecreased);
+				break;
 			} else
 				return null;
-			break;
 		}
 		case LEFT: {
 			newState.moveLeft();
@@ -100,9 +140,9 @@ public class EndGame implements SearchProblem {
 				HealthReport healthReport = getHealthDecreasingAmount(newState);
 				int healthDecreased = healthReport.computeDamage(false);
 				newState.decrementHealth(healthDecreased);
+				break;
 			} else
 				return null;
-			break;
 		}
 		case RIGHT: {
 			newState.moveRight();
@@ -124,7 +164,8 @@ public class EndGame implements SearchProblem {
 			for (int i = 0; i < stones.size();) {
 				if (newState.getPosition().equals(stones.get(i))) {
 					validAction |= true;
-					newState.getRemainingStones().remove(i);
+					stonesTracker.replace(stones.get(i), false, true);
+					stones.remove(i);
 					newState.decrementHealth(3);
 				} else
 					i++;
@@ -166,8 +207,9 @@ public class EndGame implements SearchProblem {
 			break;
 		}
 		int newStateRemainingHealth = newState.getRemainingHealth();
-		if (newStateRemainingHealth == 0)
+		if (newStateRemainingHealth <= 0)
 			return null;
+		monitorState(newState);
 		return newState;
 	}
 
@@ -177,6 +219,13 @@ public class EndGame implements SearchProblem {
 		return 0;
 	}
 
+	/***
+	 * function responsible for approving upon a certain made move.
+	 * 
+	 * @param movement the new location of Iron Man
+	 * @param state    the new state of the current node to explore it
+	 * @return approving or disapproving boolean
+	 */
 	public boolean allowedMove(Pair<Integer, Integer> movement, State state) {
 		ArrayList<Pair<Integer, Integer>> warriorsLocations = state.getWarriorsLocations();
 		boolean xAllowed = movement.getValue0() != -1 && movement.getValue0() != gridSize.getValue0();
@@ -189,6 +238,14 @@ public class EndGame implements SearchProblem {
 		return false;
 	}
 
+	/***
+	 * function responsible for retrieving knowledge about Iron Man's health state
+	 * regarding the surrounding danger; Thanos, Warriors, such as the warriors
+	 * count and whether he is adjacent to Thanos or not.
+	 * 
+	 * @param state the current state to explore
+	 * @return the corresponding health report related to Iron Man's position
+	 */
 	public HealthReport getHealthDecreasingAmount(State state) {
 		int warriorsHit = 0;
 		boolean thanosHit = false;
@@ -199,10 +256,18 @@ public class EndGame implements SearchProblem {
 
 		for (Pair<Integer, Integer> warriorPosition : warriorsLocations)
 			if (isAdjacent(position, warriorPosition))
-				warriorsHit += 1;
+				warriorsHit++;
 		return new HealthReport(thanosHit, warriorsHit);
 	}
 
+	/***
+	 * function responsible for indicating if two given position pairs are adjacent
+	 * to one another or not.
+	 * 
+	 * @param self  first pair
+	 * @param other second pair
+	 * @return boolean
+	 */
 	public boolean isAdjacent(Pair<Integer, Integer> self, Pair<Integer, Integer> other) {
 		int xSelfLoc = self.getValue0();
 		int ySelfLoc = self.getValue1();
@@ -213,6 +278,30 @@ public class EndGame implements SearchProblem {
 		boolean up = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc + 1;
 		boolean down = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc - 1;
 		return right || left || up || down;
+	}
+
+	public void monitorState(State state) {
+		if (state.getRemainingStones().size() < scoreRemainingStones) {
+			scoreRemainingStones = state.getRemainingStones().size();
+			System.out.println("\nNew score for remaining stones: " + state);
+			System.out.println(stonesTracker);
+		}
+		if (state.getPosition().getValue0() > furtherPlace.getValue0()) {
+			furtherPlace = furtherPlace.setAt0(state.getPosition().getValue0());
+			System.out.println("\nNew further X value: " + state);
+		}
+		if (state.getPosition().getValue1() > furtherPlace.getValue1()) {
+			furtherPlace = furtherPlace.setAt1(state.getPosition().getValue1());
+			System.out.println("\nNew further Y value: " + state);
+		}
+
+	}
+
+	public void initiateStonesTracker(ArrayList<Pair<Integer, Integer>> stones) {
+		stonesTracker = new Hashtable<Pair<Integer, Integer>, Boolean>();
+		for (Pair<Integer, Integer> pair : stones) {
+			stonesTracker.put(pair, false);
+		}
 	}
 
 }

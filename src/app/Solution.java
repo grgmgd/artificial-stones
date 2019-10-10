@@ -38,7 +38,7 @@ public class Solution {
 	}
 
 	public void addPlan(Operators leadingOperator) {
-		plan += plan.length() > 0 ? ", " + leadingOperator : leadingOperator;
+		plan = (plan.length() > 0 ? leadingOperator + ", " : leadingOperator) + plan;
 	}
 
 	public void addCost(int c) {

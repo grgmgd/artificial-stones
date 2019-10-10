@@ -40,8 +40,10 @@ public class SearchTreeNode {
 	}
 
 	public Solution getSolution(Solution solution) {
-		solution.addPlan(leadingOperator);
-		solution.addCost(cost);
+		if (leadingOperator != null) {
+			solution.addPlan(leadingOperator);
+			solution.addCost(cost);
+		}
 		// TODO solution.addNodes?
 		while (getParent() != null)
 			return getParent().getSolution(solution);
