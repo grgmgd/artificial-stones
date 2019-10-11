@@ -1,7 +1,6 @@
 package app;
 
 import java.util.ArrayList;
-
 import org.javatuples.Pair;
 
 /***
@@ -82,6 +81,7 @@ public class EndGame implements SearchProblem {
 	 * 
 	 * @return boolean
 	 */
+
 	public Boolean goalTest(State state) {
 		Boolean condition = state.isSnapped() && state.remainingHealth > 0;
 		return condition;
@@ -189,7 +189,7 @@ public class EndGame implements SearchProblem {
 		if (newStateRemainingHealth <= 0)
 			return null;
 
-		monitorState(newState);
+		// monitorState(newState);
 		int newCost = pathCost(node.getState(), operator);
 		SearchTreeNode newNode = new SearchTreeNode(newState, node, operator, newCost, node.getDepth() + 1);
 		return newNode;
@@ -200,7 +200,7 @@ public class EndGame implements SearchProblem {
 		HealthReport healthReport = getHealthDecreasingAmount(state);
 		int healthDecreased = healthReport.computeDamage(operator == Operators.KILL);
 		state.decrementHealth(healthDecreased);
-		return healthDecreased;
+		return 1 + healthDecreased;
 	}
 
 	/***
@@ -210,6 +210,7 @@ public class EndGame implements SearchProblem {
 	 * @param state    the new state of the current node to explore it
 	 * @return approving or disapproving boolean
 	 */
+
 	public boolean allowedMove(Pair<Integer, Integer> movement, State state) {
 		ArrayList<Pair<Integer, Integer>> warriorsLocations = state.getWarriorsLocations();
 		boolean xAllowed = movement.getValue0() != -1 && movement.getValue0() != gridSize.getValue0();
@@ -230,6 +231,7 @@ public class EndGame implements SearchProblem {
 	 * @param state the current state to explore
 	 * @return the corresponding health report related to Iron Man's position
 	 */
+
 	public HealthReport getHealthDecreasingAmount(State state) {
 		int warriorsHit = 0;
 		boolean thanosHit = false;
@@ -252,6 +254,7 @@ public class EndGame implements SearchProblem {
 	 * @param other second pair
 	 * @return boolean
 	 */
+
 	public boolean isAdjacent(Pair<Integer, Integer> self, Pair<Integer, Integer> other) {
 		int xSelfLoc = self.getValue0();
 		int ySelfLoc = self.getValue1();

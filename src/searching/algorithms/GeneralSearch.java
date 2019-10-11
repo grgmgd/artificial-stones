@@ -1,5 +1,7 @@
 package searching.algorithms;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -34,49 +36,45 @@ public class GeneralSearch {
 			}
 			if (problem.goalTest(node.state))
 				return node.backtrack() + ";" + node.backtrackCost();
-			SearchTreeNode[] expansionList = expand(node);
-			quing(nodes, node, expansionList);
+			quing(expand(node));
 		}
 
 		return null;
 	}
 
-	public SearchTreeNode[] expand(SearchTreeNode node) {
+	public ArrayList<SearchTreeNode> expand(SearchTreeNode node) {
 		Operators[] operators = Operators.values();
-		SearchTreeNode[] expansionList = new SearchTreeNode[operators.length];
-		int index = 0;
+		ArrayList<SearchTreeNode> expansionList = new ArrayList<SearchTreeNode>();
 		for (Operators opr : operators) {
 			SearchTreeNode expansionNode = problem.transitionFunction(node, opr);
 			if (expansionNode != null && !isRepeated(expansionNode)) {
-				expansionList[index] = expansionNode;
-				index++;
+				expansionList.add(expansionNode);
 			}
 		}
 		return expansionList;
 	}
 
-	public void quing(LinkedList<SearchTreeNode> n, SearchTreeNode node, SearchTreeNode[] expansionList) {
+	public void quing(ArrayList<SearchTreeNode> expansionList) {
 		switch (strategy) {
 		case DF: {
-			for (int i = expansionList.length - 1; i >= 0; i--) {
-				SearchTreeNode searchTreeNode = expansionList[i];
-				if (searchTreeNode != null)
-					n.addFirst(searchTreeNode);
-			}
-			break;
+			for (SearchTreeNode node : expansionList)
+				nodes.addFirst(node);
 		}
+			break;
 		case BF: {
-			for (SearchTreeNode searchTreeNode : expansionList)
-				if (searchTreeNode != null)
-					n.addLast(searchTreeNode);
+			for (SearchTreeNode node : expansionList)
+				nodes.addLast(node);
 			break;
 		}
 		case ID: {
 			break;
 		}
 		case UC: {
-			break;
+			Collections.sort(expansionList);
+			for (SearchTreeNode node : expansionList)
+				nodes.addLast(node);
 		}
+			break;
 		case ASi: {
 			break;
 		}
