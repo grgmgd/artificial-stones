@@ -4,7 +4,7 @@ package app;
  * SearchTreeNode
  */
 
-public class SearchTreeNode {
+public class SearchTreeNode implements Comparable<SearchTreeNode> {
 	public State state;
 	public SearchTreeNode parent;
 	public Operators leadingOperator;
@@ -51,11 +51,15 @@ public class SearchTreeNode {
 		if (this.getParent() == null)
 			return 0;
 		return parent.backtrackCost() + this.getCost();
-
 	}
 
 	@Override
 	public String toString() {
 		return "(" + leadingOperator + ") at depth: " + depth + "\nState: " + state;
+	}
+
+	@Override
+	public int compareTo(SearchTreeNode node) {
+		return this.getCost() - node.getCost();
 	}
 }
