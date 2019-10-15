@@ -42,14 +42,7 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 	public String backtrack() {
 		if (this.getParent() == null)
 			return "";
-		return parent.backtrack() + this.getLeadingOperator() + ", ";
-	}
-
-	public int backtrackCost() {
-		if (this.getParent() == null)
-			return 0;
-		return parent.backtrackCost() + this.getCost();
-
+		return parent.backtrack() + " " + this.getLeadingOperator();
 	}
 
 	@Override

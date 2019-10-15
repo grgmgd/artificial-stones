@@ -190,17 +190,18 @@ public class EndGame implements SearchProblem {
 			return null;
 
 		// monitorState(newState);
-		int newCost = pathCost(node.getState(), operator);
+		int newCost = pathCost(node, operator);
 		SearchTreeNode newNode = new SearchTreeNode(newState, node, operator, newCost, node.getDepth() + 1);
 		return newNode;
 	}
 
 	@Override
-	public int pathCost(State state, Operators operator) {
+	public int pathCost(SearchTreeNode node, Operators operator) {
+		State state = node.getState();
 		HealthReport healthReport = getHealthDecreasingAmount(state);
 		int healthDecreased = healthReport.computeDamage(operator == Operators.KILL);
 		state.decrementHealth(healthDecreased);
-		return 1 + healthDecreased;
+		return node.getCost() + healthDecreased;
 	}
 
 	/***
@@ -280,6 +281,5 @@ public class EndGame implements SearchProblem {
 			furtherPlace = furtherPlace.setAt1(state.getPosition().getValue1());
 			System.out.println("\nNew further Y value: " + state);
 		}
-
 	}
 }

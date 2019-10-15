@@ -27,15 +27,15 @@ public class GeneralSearch {
 
 	public String figure() {
 		while (!nodes.isEmpty()) {
-			SearchTreeNode node = nodes.remove(0);
+			SearchTreeNode node = nodes.removeFirst();
 			int nodeDepth = node.getDepth();
 			if (nodeDepth != currentlyHandlingDepth) {
 				currentlyHandlingDepth = nodeDepth;
-				// System.out.println("Nodes count:" + nodes.size());
-				// System.out.println("Reached depth " + currentlyHandlingDepth);
+				System.out.println("Nodes count:" + nodes.size());
+				System.out.println("Reached depth " + currentlyHandlingDepth);
 			}
 			if (problem.goalTest(node.state))
-				return node.backtrack() + ";" + node.backtrackCost();
+				return node.backtrack() + ";" + node.getCost();
 			quing(expand(node));
 		}
 
@@ -57,22 +57,20 @@ public class GeneralSearch {
 	public void quing(ArrayList<SearchTreeNode> expansionList) {
 		switch (strategy) {
 		case DF: {
-			for (SearchTreeNode node : expansionList)
-				nodes.addFirst(node);
+			nodes.addAll(0, expansionList);
 		}
 			break;
 		case BF: {
-			for (SearchTreeNode node : expansionList)
-				nodes.addLast(node);
-			break;
+			nodes.addAll(expansionList);
 		}
+			break;
 		case ID: {
 			break;
 		}
 		case UC: {
-			Collections.sort(expansionList);
-			for (SearchTreeNode node : expansionList)
-				nodes.addLast(node);
+			nodes.addAll(expansionList);
+			Collections.sort(nodes);
+			// favourCheapest();
 		}
 			break;
 		case ASi: {
@@ -95,5 +93,21 @@ public class GeneralSearch {
 			return true;
 		uniqueStates.put(state, true);
 		return false;
+	}
+
+	// Better time complexity of O(n) than resorting each time O(n*log(n))
+	public void favourCheapest() {
+		int min = Integer.MAX_VALUE;
+		int index = 0;
+		for (int i = 0; i < nodes.size(); i++) {
+			int cost = nodes.get(i).getCost();
+			if (cost <= min) {
+				min = cost;
+				index = i;
+			}
+		}
+
+		SearchTreeNode cheapest = nodes.remove(index);
+		nodes.addFirst(cheapest);
 	}
 }

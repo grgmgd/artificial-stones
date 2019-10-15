@@ -11,5 +11,5 @@ public interface SearchProblem {
 
 	public Boolean goalTest(State state);
 
-	public int pathCost(State state, Operators operator);
+	public int pathCost(SearchTreeNode node, Operators operator);
 }
