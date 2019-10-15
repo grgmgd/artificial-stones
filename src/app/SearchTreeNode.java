@@ -42,7 +42,9 @@ public class SearchTreeNode {
 	public String backtrack() {
 		if (this.getParent() == null)
 			return "";
-		return parent.backtrack() + this.getLeadingOperator() + ", ";
+		else if (this.getParent().getParent() == null)
+			return this.getLeadingOperator() + "";
+		return parent.backtrack() + ", " + this.getLeadingOperator();
 	}
 
 	public int backtrackCost() {
