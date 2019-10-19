@@ -1,23 +1,29 @@
 package searching.algorithms;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import app.SearchProblem;
 import app.SearchTreeNode;
 import app.Operators;
 
 public class GeneralSearch {
-	private LinkedList<SearchTreeNode> nodes;
+	private Queue<SearchTreeNode> nodes;
 	private HashMap<String, Boolean> uniqueStates;
 	SearchingAlgorithms strategy;
 	SearchProblem problem;
 	static int currentlyHandlingDepth = 0;
+	private SearchingAlgorithms[] notOrderedStrategies = { SearchingAlgorithms.BF, SearchingAlgorithms.DF,
+			SearchingAlgorithms.ID };
 
 	public GeneralSearch(SearchProblem problem, SearchingAlgorithms strategy) {
-		nodes = new LinkedList<SearchTreeNode>();
+		if (strategy.oneOf(notOrderedStrategies))
+			nodes = new LinkedList<SearchTreeNode>();
+		else
+			nodes = new PriorityQueue<SearchTreeNode>();
 		SearchTreeNode node = new SearchTreeNode(problem.initialState(), null, null, 0, 0);
 		nodes.add(node);
 		this.problem = problem;
@@ -27,12 +33,12 @@ public class GeneralSearch {
 
 	public String figure() {
 		while (!nodes.isEmpty()) {
-			SearchTreeNode node = nodes.removeFirst();
+			SearchTreeNode node = nodes.remove();
 			int nodeDepth = node.getDepth();
 			if (nodeDepth != currentlyHandlingDepth) {
 				currentlyHandlingDepth = nodeDepth;
-				System.out.println("Nodes count:" + nodes.size());
-				System.out.println("Reached depth " + currentlyHandlingDepth);
+				// System.out.println("Nodes count:" + nodes.size());
+				// System.out.println("Reached depth " + currentlyHandlingDepth);
 			}
 			if (problem.goalTest(node.state))
 				return node.backtrack() + ";" + node.getCost();
@@ -57,11 +63,11 @@ public class GeneralSearch {
 	public void quing(ArrayList<SearchTreeNode> expansionList) {
 		switch (strategy) {
 		case DF: {
-			nodes.addAll(0, expansionList);
+			((LinkedList<SearchTreeNode>) nodes).addAll(0, expansionList);
 		}
 			break;
 		case BF: {
-			nodes.addAll(expansionList);
+			((LinkedList<SearchTreeNode>) nodes).addAll(expansionList);
 		}
 			break;
 		case ID: {
@@ -69,8 +75,6 @@ public class GeneralSearch {
 		}
 		case UC: {
 			nodes.addAll(expansionList);
-			Collections.sort(nodes);
-			// favourCheapest();
 		}
 			break;
 		case ASi: {
@@ -93,21 +97,5 @@ public class GeneralSearch {
 			return true;
 		uniqueStates.put(state, true);
 		return false;
-	}
-
-	// Better time complexity of O(n) than resorting each time O(n*log(n))
-	public void favourCheapest() {
-		int min = Integer.MAX_VALUE;
-		int index = 0;
-		for (int i = 0; i < nodes.size(); i++) {
-			int cost = nodes.get(i).getCost();
-			if (cost <= min) {
-				min = cost;
-				index = i;
-			}
-		}
-
-		SearchTreeNode cheapest = nodes.remove(index);
-		nodes.addFirst(cheapest);
 	}
 }
