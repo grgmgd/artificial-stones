@@ -16,7 +16,7 @@ public class Main {
 	 *                  your program side-effecting a visual presentation of the
 	 *                  grid as it undergoes the different steps of the discovered
 	 *                  solution
-	 * @return String representing the formulated plan with a cost and number of
+	 * @return String representi`ng the formulated plan with a cost and number of
 	 *         nodes in format: plan;cost;nodes
 	 */
 
@@ -38,11 +38,15 @@ public class Main {
 		return "There is no solution";
 	}
 
+	public static String solve(String grid, String strategy, Boolean visualize) {
+		return solve(grid, SearchingAlgorithms.valueOf(strategy), visualize);
+	}
+
 	public static void main(String[] args) throws Exception {
 		String[] grids = { "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0;0,3,3,0,3,2,3,4,4,3", "3,3;0,0;1,1;0,1,2,0;1,0",
 				"8,8;0,3;4,4;1,1,2,2,3,3,5,0,5,5;1,0,0,1,0,5,2,4,3,1,4,1,4,3",
 				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11,10,0" };
-		SearchingAlgorithms strategy = SearchingAlgorithms.ID;
+		SearchingAlgorithms strategy = SearchingAlgorithms.BF;
 		long startTime = System.currentTimeMillis();
 		String solution = solve(grids[3], strategy, true);
 		long endTime = System.currentTimeMillis();
