@@ -13,15 +13,4 @@ Tests are inclueded in `src/app/EndGameTests.java`
 ## List of Algorithms
 | Algorithm|    Status     |
 |----------|:-------------:|
-| Breadth First Search |  ```diff
-+ Done``` |
-| Depth First Search |  ```diff
-+ Done``` |
-| Uniform Cost Search |  ```diff
-+ Done``` |
-| Iterative Deepening Search |  ```diff
-! Testing``` |
-| Greedy Search |  ```diff
-- Not Implemented``` |
-| A* Search |  ```diff
-- Not Implemented``` |
+| Breadth First Search | <span style=style="background-color:green; padding: 10px 20px;">done<span>|
