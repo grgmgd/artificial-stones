@@ -1,7 +1,7 @@
 package searching.algorithms;
 
 public enum SearchingAlgorithms {
-	BF, DF, ID, UC, GRi, ASi;
+	BF, DF, ID, UC, GR1, GR2, AS1, AS2;
 
 	public boolean oneOf(SearchingAlgorithms[] algorithms) {
 		for (SearchingAlgorithms algorithm : algorithms) {

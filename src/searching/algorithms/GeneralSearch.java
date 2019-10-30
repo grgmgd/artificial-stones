@@ -93,10 +93,12 @@ public class GeneralSearch {
 			nodes.addAll(expansionList);
 		}
 			break;
-		case ASi: {
+		case AS1:
+		case AS2: {
 			break;
 		}
-		case GRi: {
+		case GR1:
+		case GR2: {
 			break;
 		}
 		default:
