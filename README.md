@@ -13,4 +13,4 @@ Tests are inclueded in `src/app/EndGameTests.java`
 ## List of Algorithms
 | Algorithm|    Status     |
 |----------|:-------------:|
-| Breadth First Search | <span style=style="background-color:green; padding: 10px 20px;">done</span>|
+| Breadth First Search | <!-- <span style=style="background-color:green; padding: 10px 20px;">done</span> -->|
