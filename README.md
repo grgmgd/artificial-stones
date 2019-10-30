@@ -8,7 +8,7 @@ You need these packages in `jar` formtat installed in your `lib` directory befor
 - [JUnit](http://www.java2s.com/Code/Jar/j/Downloadjunit411jar.htm)
 
 ## 🧪 Tests
-Tests are inclueded in `src/app/EndGameTests.java`
+Tests are included in `src/app/EndGameTests.java`
 
 ## 🤓 List of Algorithms
 | Algorithm|    Status     |
@@ -16,6 +16,6 @@ Tests are inclueded in `src/app/EndGameTests.java`
 | Breadth First Search | Done |
 | Depth First Search | Done |
 | Uniform Cost Search | Done |
-| Iterative Deepening Search | Testing |
+| Iterative Deepening Search | Done |
 | Greedy Search | Missing |
 | A* Search | Missing |
