@@ -1,6 +1,7 @@
 package searching.algorithms;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
@@ -85,6 +86,7 @@ public class GeneralSearch {
 		switch (strategy) {
 		case DF:
 		case ID: {
+			Collections.reverse(expansionList);
 			((LinkedList<SearchTreeNode>) nodes).addAll(0, expansionList);
 		}
 			break;

@@ -45,10 +45,13 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		String[] grids = { "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0;0,3,3,0,3,2,3,4,4,3", "3,3;0,0;1,1;0,1,2,0;1,0",
 				"8,8;0,3;4,4;1,1,2,2,3,3,5,0,5,5;1,0,0,1,0,5,2,4,3,1,4,1,4,3",
-				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11,10,0" };
-		SearchingAlgorithms strategy = SearchingAlgorithms.ID;
+				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11,10,0",
+				"11,11;9,5;7,1;9,0,8,8,9,1,8,4,2,3,9,10;2,0,0,10,6,3,10,6,6,2",
+				"14,14;2,13;12,7;8,6,9,4,7,1,4,4,4,7,2,3;8,13,0,4,0,8,5,7,10,0",
+				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11" };
+		SearchingAlgorithms strategy = SearchingAlgorithms.BF;
 
-		int EXPLORE = 2;
+		int EXPLORE = 3;
 		System.out.println("Exploring: " + grids[EXPLORE]);
 
 		long startTime = System.currentTimeMillis();
