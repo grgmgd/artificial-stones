@@ -186,7 +186,6 @@ public class EndGame implements SearchProblem {
 			break;
 
 		default:
-			break;
 		}
 
 		int newStateRemainingHealth = newState.getRemainingHealth();
@@ -196,6 +195,7 @@ public class EndGame implements SearchProblem {
 		// monitorState(newState);
 		int newCost = pathCost(node, operator);
 		SearchTreeNode newNode = new SearchTreeNode(newState, node, operator, newCost, node.getDepth() + 1);
+		newNode.setHeuristicCost(node.getHeuristicCost());
 		return newNode;
 	}
 
@@ -210,26 +210,28 @@ public class EndGame implements SearchProblem {
 		case GR2:
 		case AS1:
 		case AS2:
-			 computeHeuristicCost(node);
+			computeHeuristicCost(node);
 			break;
 		default:
-			 node.getCost();
 		}
 		return healthDecreased + finalCost;
 	}
 
 	public void computeHeuristicCost(SearchTreeNode node) {
+		int thanosExtraCost = 0;
 		switch (strategy) {
 		case GR1:
-			node.setHeuristicCost(node.getState().getRemainingStones().size());
+			thanosExtraCost = node.getState().getPosition().equals(thanosPosition) ? 0 : 1;
+			node.setHeuristicCost(node.getState().getRemainingStones().size() + thanosExtraCost);
 			break;
 		case GR2:
 		case AS1:
-			node.setHeuristicCost(node.getState().getRemainingStones().size());
+			thanosExtraCost = node.getState().getPosition().equals(thanosPosition) ? 0 : 1;
+			node.setHeuristicCost(node.getState().getRemainingStones().size() + thanosExtraCost);
 			break;
 		case AS2:
 		default:
-			 node.setHeuristicCost(node.getNormalCost());
+			node.setHeuristicCost(node.getNormalCost());
 		}
 	}
 
@@ -267,7 +269,7 @@ public class EndGame implements SearchProblem {
 		boolean thanosHit = false;
 		ArrayList<Pair<Integer, Integer>> warriorsLocations = state.getWarriorsLocations();
 		Pair<Integer, Integer> position = state.getPosition();
-		if (isAdjacent(position, thanosPosition))
+		if (isAdjacent(position, thanosPosition) || position.equals(thanosPosition))
 			thanosHit = true;
 
 		for (Pair<Integer, Integer> warriorPosition : warriorsLocations)
