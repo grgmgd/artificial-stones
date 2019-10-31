@@ -24,7 +24,7 @@ public class Main {
 	 */
 
 	public static String solve(String grid, SearchingAlgorithms strategy, Boolean visualize) {
-		EndGame endGame = new EndGame(grid);
+		EndGame endGame = new EndGame(grid, strategy);
 		GeneralSearch generalSearch = new GeneralSearch(endGame, strategy);
 		String plan = generalSearch.search();
 
@@ -49,7 +49,7 @@ public class Main {
 		String[] grids = { "2,2;0,0;1,1;0,1;1,0", "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0;0,3,3,0,3,2,3,4,4,3",
 				"3,3;0,0;1,1;0,1,2,0;1,0", "8,8;0,3;4,4;1,1,2,2,3,3,5,0,5,5;1,0,0,1,0,5,2,4,3,1,4,1,4,3",
 				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11" };
-		SearchingAlgorithms strategy = SearchingAlgorithms.UC;
+		SearchingAlgorithms strategy = SearchingAlgorithms.BF;
 		long startTime = System.currentTimeMillis();
 		int EXPLORE = 4;
 		String solution = solve(grids[EXPLORE], strategy, true);

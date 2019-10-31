@@ -3,6 +3,8 @@ package app;
 import java.util.ArrayList;
 import org.javatuples.Pair;
 
+import searching.algorithms.SearchingAlgorithms;
+
 /***
  * EndGame is the SearchProblem instance in which our problem is defined. This
  * class contains all the main tools that will contribute in the problem
@@ -25,11 +27,13 @@ public class EndGame implements SearchProblem {
 	Pair<Integer, Integer> gridSize;
 	Pair<Integer, Integer> thanosPosition;
 	String problem;
+	public static SearchingAlgorithms strategy;
 	public static int scoreRemainingStones = 7;
 	public static Pair<Integer, Integer> furtherPlace = new Pair<Integer, Integer>(0, 0);
 
-	public EndGame(String problem) {
+	public EndGame(String problem, SearchingAlgorithms strategy) {
 		this.problem = problem;
+		EndGame.strategy = strategy;
 	}
 
 	/***
@@ -195,13 +199,38 @@ public class EndGame implements SearchProblem {
 		return newNode;
 	}
 
-	@Override
 	public int pathCost(SearchTreeNode node, Operators operator) {
 		State state = node.getState();
 		HealthReport healthReport = getHealthDecreasingAmount(state);
 		int healthDecreased = healthReport.computeDamage(operator);
 		state.decrementHealth(healthDecreased);
-		return node.getCost() + healthDecreased;
+		int finalCost = node.getCost();
+		switch (strategy) {
+		case GR1:
+		case GR2:
+		case AS1:
+		case AS2:
+			 computeHeuristicCost(node);
+			break;
+		default:
+			 node.getCost();
+		}
+		return healthDecreased + finalCost;
+	}
+
+	public void computeHeuristicCost(SearchTreeNode node) {
+		switch (strategy) {
+		case GR1:
+			node.setHeuristicCost(node.getState().getRemainingStones().size());
+			break;
+		case GR2:
+		case AS1:
+			node.setHeuristicCost(node.getState().getRemainingStones().size());
+			break;
+		case AS2:
+		default:
+			 node.setHeuristicCost(node.getNormalCost());
+		}
 	}
 
 	/***

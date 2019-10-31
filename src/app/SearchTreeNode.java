@@ -1,5 +1,7 @@
 package app;
 
+import searching.algorithms.SearchingAlgorithms;
+
 /**
  * SearchTreeNode
  */
@@ -9,6 +11,7 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 	public SearchTreeNode parent;
 	public Operators leadingOperator;
 	public int cost;
+	public int heuristicCost;
 	public int depth;
 
 	public SearchTreeNode(State state, SearchTreeNode parent, Operators opr, int cost, int depth) {
@@ -31,12 +34,25 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 		return leadingOperator;
 	}
 
+	public int getNormalCost() {
+		return cost;
+	}
+
 	public int getCost() {
 		return cost;
+
 	}
 
 	public int getDepth() {
 		return depth;
+	}
+
+	public int getHeuristicCost() {
+		return heuristicCost;
+	}
+
+	public void setHeuristicCost(int cost) {
+		heuristicCost = cost;
 	}
 
 	public String backtrack() {
@@ -58,6 +74,17 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 
 	@Override
 	public int compareTo(SearchTreeNode node) {
-		return this.getCost() - node.getCost();
+		switch (EndGame.strategy) {
+		case GR1:
+		case GR2:
+			return this.getHeuristicCost() - node.getHeuristicCost();
+		case AS1:
+		case AS2:
+			return (this.getHeuristicCost() + this.getCost()) - (node.getHeuristicCost() + node.getCost());
+		default:
+			return this.getCost() - node.getCost();
+
+		}
+
 	}
 }

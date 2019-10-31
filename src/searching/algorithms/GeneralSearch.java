@@ -1,6 +1,7 @@
 package searching.algorithms;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
@@ -39,18 +40,15 @@ public class GeneralSearch {
 	public String search() {
 		if (this.strategy == SearchingAlgorithms.ID) {
 			int depth = 0;
-
 			while (true) {
 				String plan = figure(depth);
-				if (plan != null) {
+				if (plan != null)
 					return plan;
-				}
 				depth++;
 				initQueue();
 			}
 		}
-
-		return figure(0);
+		return figure(-1);
 	}
 
 	public String figure(int depth) {
@@ -59,13 +57,10 @@ public class GeneralSearch {
 			int nodeDepth = node.getDepth();
 			if (problem.goalTest(node.state))
 				return node.backtrack() + ";" + node.getCost();
-
-			if (this.strategy == SearchingAlgorithms.ID && nodeDepth == depth) {
+			if (this.strategy == SearchingAlgorithms.ID && nodeDepth == depth)
 				continue;
-			}
 			quing(expand(node));
 		}
-
 		return null;
 	}
 
@@ -85,22 +80,17 @@ public class GeneralSearch {
 		switch (strategy) {
 		case DF:
 		case ID: {
+			Collections.reverse(expansionList);
 			((LinkedList<SearchTreeNode>) nodes).addAll(0, expansionList);
 		}
 			break;
 		case BF:
-		case UC: {
-			nodes.addAll(expansionList);
-		}
-			break;
+		case UC:
 		case AS1:
-		case AS2: {
-			break;
-		}
+		case AS2:
 		case GR1:
-		case GR2: {
-			break;
-		}
+		case GR2:
+			nodes.addAll(expansionList);
 		default:
 		}
 	}
@@ -116,4 +106,5 @@ public class GeneralSearch {
 		uniqueStates.put(state, true);
 		return false;
 	}
+
 }
