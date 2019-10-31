@@ -1,6 +1,9 @@
 package app;
 
 import searching.algorithms.SearchingAlgorithms;
+
+import java.util.concurrent.TimeUnit;
+
 import searching.algorithms.GeneralSearch;
 
 public class Main {
@@ -49,15 +52,28 @@ public class Main {
 				"11,11;9,5;7,1;9,0,8,8,9,1,8,4,2,3,9,10;2,0,0,10,6,3,10,6,6,2",
 				"14,14;2,13;12,7;8,6,9,4,7,1,4,4,4,7,2,3;8,13,0,4,0,8,5,7,10,0",
 				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11" };
-		SearchingAlgorithms strategy = SearchingAlgorithms.BF;
+		SearchingAlgorithms strategy = SearchingAlgorithms.UC;
 
 		int EXPLORE = 3;
-		System.out.println("Exploring: " + grids[EXPLORE]);
 
 		long startTime = System.currentTimeMillis();
 		String solution = solve(grids[EXPLORE], strategy, true);
-		long endTime = System.currentTimeMillis();
-		System.out.println("That took " + (endTime - startTime) + " milliseconds");
+		System.out.println("Exploring: " + grids[EXPLORE]);
+		long heapSize = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		System.out.println("Memory used " + formatSize(heapSize));
+		long solutionTime = System.currentTimeMillis() - startTime;
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(solutionTime);
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(solutionTime);
+		System.out.println(
+				"Solution generation took " + minutes + "m " + (minutes > 0 ? seconds - (minutes * 60) : seconds) + "s "
+						+ (seconds > 0 ? solutionTime - (seconds * 1000) : solutionTime) + "ms");
 		System.out.println(solution);
+	}
+
+	public static String formatSize(long v) {
+		if (v < 1024)
+			return v + " B";
+		int z = (63 - Long.numberOfLeadingZeros(v)) / 10;
+		return String.format("%.1f %sB", (double) v / (1L << (z * 10)), " KMGTPE".charAt(z));
 	}
 }
