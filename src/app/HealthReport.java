@@ -21,11 +21,11 @@ public class HealthReport {
 	 * function responsible for generating the total health cost (damage taken)
 	 * according to Iron Man's position
 	 * 
-	 * @param killAttempt boolean indicating whether the warriors will try to double
-	 *                    their damage or not
+	 * @param kill boolean indicating whether the warriors will try to double their
+	 *             damage or not
 	 * @return the total health cost
 	 */
-	public int computeDamage(boolean killAttempt) {
-		return (thanosHit ? 5 : 0) + (killAttempt ? 2 : 1) * warriorsHit;
+	public int computeDamage(Operators operator) {
+		return (thanosHit ? 5 : 0) + (operator == Operators.KILL ? 2 : 1) * warriorsHit + (operator == Operators.COLLECT ? 3 : 0);
 	}
 }

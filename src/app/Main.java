@@ -1,6 +1,9 @@
 package app;
 
 import searching.algorithms.SearchingAlgorithms;
+
+import java.util.concurrent.TimeUnit;
+
 import searching.algorithms.GeneralSearch;
 
 public class Main {
@@ -43,14 +46,22 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String[] grids = { "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0;0,3,3,0,3,2,3,4,4,3", "3,3;0,0;1,1;0,1,2,0;1,0",
-				"8,8;0,3;4,4;1,1,2,2,3,3,5,0,5,5;1,0,0,1,0,5,2,4,3,1,4,1,4,3",
-				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11,10,0" };
-		SearchingAlgorithms strategy = SearchingAlgorithms.BF;
+		String[] grids = { "2,2;0,0;1,1;0,1;1,0", "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0;0,3,3,0,3,2,3,4,4,3",
+				"3,3;0,0;1,1;0,1,2,0;1,0", "8,8;0,3;4,4;1,1,2,2,3,3,5,0,5,5;1,0,0,1,0,5,2,4,3,1,4,1,4,3",
+				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11" };
+		SearchingAlgorithms strategy = SearchingAlgorithms.UC;
 		long startTime = System.currentTimeMillis();
-		String solution = solve(grids[3], strategy, true);
-		long endTime = System.currentTimeMillis();
-		System.out.println("That took " + (endTime - startTime) + " milliseconds");
+		String solution = solve(grids[4], strategy, true);
+
+		long heapSize = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+//		System.out.println("Memory used " + formatSize(heapSize));
+		long solutionTime = System.currentTimeMillis() - startTime;
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(solutionTime);
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(solutionTime);
+		System.out.println(
+				"Solution generation took " + minutes + "m " + (minutes > 0 ? seconds - (minutes * 60) : seconds) + "s "
+						+ (seconds > 0 ? solutionTime - (seconds * 1000) : solutionTime) + "ms");
+
 		System.out.println(solution);
 	}
 }

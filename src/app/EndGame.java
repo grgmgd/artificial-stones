@@ -199,7 +199,7 @@ public class EndGame implements SearchProblem {
 	public int pathCost(SearchTreeNode node, Operators operator) {
 		State state = node.getState();
 		HealthReport healthReport = getHealthDecreasingAmount(state);
-		int healthDecreased = healthReport.computeDamage(operator == Operators.KILL);
+		int healthDecreased = healthReport.computeDamage(operator);
 		state.decrementHealth(healthDecreased);
 		return node.getCost() + healthDecreased;
 	}
