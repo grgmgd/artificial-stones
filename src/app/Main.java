@@ -46,9 +46,13 @@ public class Main {
 		String[] grids = { "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0;0,3,3,0,3,2,3,4,4,3", "3,3;0,0;1,1;0,1,2,0;1,0",
 				"8,8;0,3;4,4;1,1,2,2,3,3,5,0,5,5;1,0,0,1,0,5,2,4,3,1,4,1,4,3",
 				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11,10,0" };
-		SearchingAlgorithms strategy = SearchingAlgorithms.BF;
+		SearchingAlgorithms strategy = SearchingAlgorithms.ID;
+
+		int EXPLORE = 2;
+		System.out.println("Exploring: " + grids[EXPLORE]);
+
 		long startTime = System.currentTimeMillis();
-		String solution = solve(grids[3], strategy, true);
+		String solution = solve(grids[EXPLORE], strategy, true);
 		long endTime = System.currentTimeMillis();
 		System.out.println("That took " + (endTime - startTime) + " milliseconds");
 		System.out.println(solution);
