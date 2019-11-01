@@ -91,6 +91,7 @@ public class GeneralSearch {
 		case GR1:
 		case GR2:
 			nodes.addAll(expansionList);
+			break;
 		default:
 		}
 	}
