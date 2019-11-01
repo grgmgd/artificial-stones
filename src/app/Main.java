@@ -1,9 +1,7 @@
 package app;
 
 import searching.algorithms.SearchingAlgorithms;
-
 import java.util.concurrent.TimeUnit;
-
 import searching.algorithms.GeneralSearch;
 
 public class Main {
