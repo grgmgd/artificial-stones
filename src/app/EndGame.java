@@ -201,7 +201,7 @@ public class EndGame implements SearchProblem {
 
 	public int pathCost(SearchTreeNode node, Operators operator) {
 		State state = node.getState();
-		HealthReport healthReport = getHealthDecreasingAmount(state);
+		HealthReport healthReport = getHealthDecreasingAmount(state, operator);
 		int healthDecreased = healthReport.computeDamage(operator);
 		state.decrementHealth(healthDecreased);
 		int priorCost = node.getCost();
@@ -264,12 +264,13 @@ public class EndGame implements SearchProblem {
 	 * @return the corresponding health report related to Iron Man's position
 	 */
 
-	public HealthReport getHealthDecreasingAmount(State state) {
+	public HealthReport getHealthDecreasingAmount(State state, Operators operator) {
 		int warriorsHit = 0;
 		boolean thanosHit = false;
 		ArrayList<Pair<Integer, Integer>> warriorsLocations = state.getWarriorsLocations();
 		Pair<Integer, Integer> position = state.getPosition();
-		if (isAdjacent(position, thanosPosition) || position.equals(thanosPosition))
+		if (isAdjacent(position, thanosPosition)
+				|| (position.equals(thanosPosition) && !operator.equals(Operators.SNAP)))
 			thanosHit = true;
 
 		for (Pair<Integer, Integer> warriorPosition : warriorsLocations)
