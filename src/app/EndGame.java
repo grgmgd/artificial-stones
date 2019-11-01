@@ -204,7 +204,7 @@ public class EndGame implements SearchProblem {
 		HealthReport healthReport = getHealthDecreasingAmount(state);
 		int healthDecreased = healthReport.computeDamage(operator);
 		state.decrementHealth(healthDecreased);
-		int finalCost = node.getCost();
+		int priorCost = node.getCost();
 		switch (strategy) {
 		case GR1:
 		case GR2:
@@ -214,7 +214,7 @@ public class EndGame implements SearchProblem {
 			break;
 		default:
 		}
-		return healthDecreased + finalCost;
+		return healthDecreased + priorCost;
 	}
 
 	public void computeHeuristicCost(SearchTreeNode node) {

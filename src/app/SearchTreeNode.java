@@ -1,7 +1,5 @@
 package app;
 
-import searching.algorithms.SearchingAlgorithms;
-
 /**
  * SearchTreeNode
  */
@@ -61,12 +59,6 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 		return parent.backtrack() + "," + this.getLeadingOperator().toString().toLowerCase();
 	}
 
-	public int backtrackCost() {
-		if (this.getParent() == null)
-			return 0;
-		return parent.backtrackCost() + this.getCost();
-	}
-
 	@Override
 	public String toString() {
 		return "(" + leadingOperator + ") at depth: " + depth + "\nState: " + state;
@@ -83,7 +75,6 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 			return (this.getHeuristicCost() + this.getCost()) - (node.getHeuristicCost() + node.getCost());
 		default:
 			return this.getCost() - node.getCost();
-
 		}
 
 	}
