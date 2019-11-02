@@ -2,9 +2,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - Visualization",
+            "name": "CodeLens (Launch) - Testing",
             "request": "launch",
-            "mainClass": "app.Visualization",
+            "mainClass": "app.Testing",
             "projectName": "artificial-stones"
         },
         {

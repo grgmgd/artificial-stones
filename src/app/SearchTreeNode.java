@@ -4,11 +4,12 @@ package app;
  * SearchTreeNode
  */
 
-public class SearchTreeNode {
+public class SearchTreeNode implements Comparable<SearchTreeNode> {
 	public State state;
 	public SearchTreeNode parent;
 	public Operators leadingOperator;
 	public int cost;
+	public int heuristicCost;
 	public int depth;
 
 	public SearchTreeNode(State state, SearchTreeNode parent, Operators opr, int cost, int depth) {
@@ -31,20 +32,50 @@ public class SearchTreeNode {
 		return leadingOperator;
 	}
 
+	public int getNormalCost() {
+		return cost;
+	}
+
 	public int getCost() {
 		return cost;
+
 	}
 
 	public int getDepth() {
 		return depth;
 	}
 
-	public Solution getSolution(Solution solution) {
-		solution.addPlan(leadingOperator);
-		solution.addCost(cost);
-		// TODO solution.addNodes?
-		while (getParent() != null)
-			return getParent().getSolution(solution);
-		return solution;
+	public int getHeuristicCost() {
+		return heuristicCost;
+	}
+
+	public void setHeuristicCost(int cost) {
+		heuristicCost = cost;
+	}
+
+	public String backtrack() {
+		if (this.getParent().getParent() == null)
+			return this.getLeadingOperator().toString().toLowerCase() + "";
+		return parent.backtrack() + "," + this.getLeadingOperator().toString().toLowerCase();
+	}
+
+	@Override
+	public String toString() {
+		return "(" + leadingOperator + ") at depth: " + depth + "\nState: " + state;
+	}
+
+	@Override
+	public int compareTo(SearchTreeNode node) {
+		switch (EndGame.strategy) {
+		case GR1:
+		case GR2:
+			return this.getHeuristicCost() - node.getHeuristicCost();
+		case AS1:
+		case AS2:
+			return (this.getHeuristicCost() + this.getCost()) - (node.getHeuristicCost() + node.getCost());
+		default:
+			return this.getCost() - node.getCost();
+		}
+
 	}
 }
