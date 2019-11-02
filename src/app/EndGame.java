@@ -226,7 +226,6 @@ public class EndGame implements SearchProblem {
 			break;
 		case GR2:
 		case AS1:
-			thanosExtraCost = node.getState().getPosition().equals(thanosPosition) ? 0 : 1;
 			node.setHeuristicCost(node.getState().getRemainingStones().size() + thanosExtraCost);
 			break;
 		case AS2:
