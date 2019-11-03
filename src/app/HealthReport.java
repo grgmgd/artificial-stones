@@ -26,6 +26,7 @@ public class HealthReport {
 	 * @return the total health cost
 	 */
 	public int computeDamage(Operators operator) {
-		return (thanosHit ? 5 : 0) + (operator == Operators.KILL ? 2 : 1) * warriorsHit + (operator == Operators.COLLECT ? 3 : 0);
+		return (thanosHit ? 5 : 0) + (operator == Operators.KILL ? 2 : 1) * warriorsHit
+				+ (operator == Operators.COLLECT ? 3 : 0);
 	}
 }

@@ -17,6 +17,7 @@ public class GeneralSearch {
 	SearchingAlgorithms strategy;
 	SearchProblem problem;
 	static int currentDepth = 0;
+	int expanded = 0;
 	private SearchingAlgorithms[] notOrderedStrategies = { SearchingAlgorithms.BF, SearchingAlgorithms.DF,
 			SearchingAlgorithms.ID };
 
@@ -56,7 +57,7 @@ public class GeneralSearch {
 			SearchTreeNode node = nodes.remove();
 			int nodeDepth = node.getDepth();
 			if (problem.goalTest(node.state))
-				return node.backtrack() + ";" + node.getCost();
+				return node.backtrack() + ";" + node.getCost() + ";" + this.expanded;
 			if (this.strategy == SearchingAlgorithms.ID && nodeDepth == depth)
 				continue;
 			quing(expand(node));
@@ -73,6 +74,8 @@ public class GeneralSearch {
 				expansionList.add(expansionNode);
 			}
 		}
+
+		this.expanded++;
 		return expansionList;
 	}
 
@@ -91,12 +94,9 @@ public class GeneralSearch {
 		case GR1:
 		case GR2:
 			nodes.addAll(expansionList);
+			break;
 		default:
 		}
-	}
-
-	public int getNodeCount() {
-		return uniqueStates.size();
 	}
 
 	public boolean isRepeated(SearchTreeNode newNode) {

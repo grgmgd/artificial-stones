@@ -209,12 +209,10 @@ public class EndGame implements SearchProblem {
 
 	public int pathCost(SearchTreeNode node, Operators operator) {
 		State state = node.getState();
-		HealthReport healthReport = getHealthDecreasingAmount(state);
+		HealthReport healthReport = getHealthDecreasingAmount(state, operator);
 		int healthDecreased = healthReport.computeDamage(operator);
 		state.decrementHealth(healthDecreased);
-		int finalCost = node.getCost();
-
-		return healthDecreased + finalCost;
+		return healthDecreased + node.getCost();
 	}
 
 	public void computeHeuristicCost(SearchTreeNode node) {
@@ -226,10 +224,33 @@ public class EndGame implements SearchProblem {
 			break;
 		case GR2:
 		case AS1:
-			thanosExtraCost = node.getState().getPosition().equals(thanosPosition) ? 0 : 1;
-			node.setHeuristicCost(node.getState().getRemainingStones().size() + thanosExtraCost);
+			node.setHeuristicCost(node.getState().getRemainingStones().size());
 			break;
 		case AS2:
+			double minimum = 0;
+			double heuristicCost;
+			ArrayList<Pair<Integer, Integer>> stones = node.getState().getRemainingStones();
+			Pair<Integer, Integer> ironMan = node.getState().getPosition();
+			if (stones.isEmpty()) {
+				double maxDistance = getDistance(new Pair<Integer, Integer>(0, 0),
+						new Pair<Integer, Integer>(gridSize.getValue0() - 1, gridSize.getValue1() - 1));
+				for (int i = 0; i < stones.size(); i++) {
+					Pair<Integer, Integer> stone = stones.get(i);
+					double distance = getDistance(ironMan, stone);
+					if (i == 0)
+						minimum = distance;
+					else
+						minimum = distance < minimum ? distance : minimum;
+				}
+				heuristicCost = (Math.abs(maxDistance - minimum) / maxDistance) * 3;
+			}
+
+			else {
+				double distance = getDistance(ironMan, thanosPosition);
+				heuristicCost = distance > 10 ? 10 : distance;
+			}
+			node.setHeuristicCost(heuristicCost);
+			break;
 		default:
 			node.setHeuristicCost(node.getNormalCost());
 		}
@@ -264,12 +285,13 @@ public class EndGame implements SearchProblem {
 	 * @return the corresponding health report related to Iron Man's position
 	 */
 
-	public HealthReport getHealthDecreasingAmount(State state) {
+	public HealthReport getHealthDecreasingAmount(State state, Operators operator) {
 		int warriorsHit = 0;
 		boolean thanosHit = false;
 		ArrayList<Pair<Integer, Integer>> warriorsLocations = state.getWarriorsLocations();
 		Pair<Integer, Integer> position = state.getPosition();
-		if (isAdjacent(position, thanosPosition) || position.equals(thanosPosition))
+		if (isAdjacent(position, thanosPosition)
+				|| (position.equals(thanosPosition) && !operator.equals(Operators.SNAP)))
 			thanosHit = true;
 
 		for (Pair<Integer, Integer> warriorPosition : warriorsLocations)
@@ -297,6 +319,14 @@ public class EndGame implements SearchProblem {
 		boolean up = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc + 1;
 		boolean down = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc - 1;
 		return right || left || up || down;
+	}
+
+	public double getDistance(Pair<Integer, Integer> x, Pair<Integer, Integer> y) {
+		int x0 = x.getValue0();
+		int x1 = x.getValue1();
+		int y0 = y.getValue0();
+		int y1 = y.getValue1();
+		return Math.sqrt(Math.pow(x0 - y0, 2) + Math.pow(x1 - y1, 2));
 	}
 
 	public void monitorState(State state) {
