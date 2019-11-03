@@ -222,12 +222,8 @@ public class EndGame implements SearchProblem {
 	 * @param node the new node for which we want to store the heuristic cost.
 	 */
 	public void computeHeuristicCost(SearchTreeNode node) {
-		int thanosExtraCost = 0;
 		switch (strategy) {
 		case GR1:
-			thanosExtraCost = node.getState().getPosition().equals(thanosPosition) ? 0 : 1;
-			node.setHeuristicCost(node.getState().getRemainingStones().size() + thanosExtraCost);
-			break;
 		case AS1:
 			node.setHeuristicCost(node.getState().getRemainingStones().size() * 3);
 			break;
@@ -252,8 +248,7 @@ public class EndGame implements SearchProblem {
 			}
 
 			else {
-				double distance = getDistance(ironMan, thanosPosition);
-				heuristicCost = distance > 10 ? 10 : distance;
+				heuristicCost = 0;
 			}
 			node.setHeuristicCost(heuristicCost);
 			break;

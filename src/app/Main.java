@@ -19,16 +19,18 @@ public class Main {
 	 *                  solution
 	 * @return String representing the formulated plan with a cost and number of
 	 *         nodes in format: plan;cost;nodes
+	 * @throws InterruptedException
 	 */
 
-	public static String solve(String grid, SearchingAlgorithms strategy, Boolean visualize) {
+	public static String solve(String grid, SearchingAlgorithms strategy, Boolean visualize)
+			throws InterruptedException {
 		EndGame endGame = new EndGame(grid, strategy);
 		GeneralSearch generalSearch = new GeneralSearch(endGame, strategy);
 		String plan = generalSearch.search();
 
 		if (plan != null && plan.length() > 0) {
 			if (visualize) {
-				// TODO: run the visualization module
+				new Visualization(generalSearch.getGoalNode().pathFromRoot(), grid);
 			}
 
 			return plan;
@@ -38,7 +40,12 @@ public class Main {
 	}
 
 	public static String solve(String grid, String strategy, Boolean visualize) {
-		return solve(grid, SearchingAlgorithms.valueOf(strategy), visualize);
+		try {
+			return solve(grid, SearchingAlgorithms.valueOf(strategy), visualize);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -49,10 +56,10 @@ public class Main {
 				"14,14;2,13;12,7;8,6,9,4,7,1,4,4,4,7,2,3;8,13,0,4,0,8,5,7,10,0",
 				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;0,0",
 				"13,13;4,2;2,4;6,1,1,10,8,4,9,2,2,8,9,4;6,4,3,4,3,11,1,12,1,9" };
-		SearchingAlgorithms strategy = SearchingAlgorithms.AS1;
-		int EXPLORE = 3;
+		SearchingAlgorithms strategy = SearchingAlgorithms.GR2;
+		int EXPLORE = 2;
 		long startTime = System.currentTimeMillis();
-		String solution = solve(grids[EXPLORE], strategy, true);
+		String solution = solve(grids[EXPLORE], strategy, false);
 		String[] entities = { "Grid Size", "Iron Man", "Thanos", "Stones", "Warriors" };
 		System.out.println("Exploring: ");
 		String[] chosenGrid = grids[EXPLORE].split(";");
