@@ -83,7 +83,8 @@ public class GeneralSearch {
 		switch (strategy) {
 		case DF:
 		case ID: {
-			Collections.reverse(expansionList);
+			if (strategy == SearchingAlgorithms.ID)
+				Collections.reverse(expansionList);
 			((LinkedList<SearchTreeNode>) nodes).addAll(0, expansionList);
 		}
 			break;
