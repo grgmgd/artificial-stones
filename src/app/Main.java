@@ -19,16 +19,18 @@ public class Main {
 	 *                  solution
 	 * @return String representing the formulated plan with a cost and number of
 	 *         nodes in format: plan;cost;nodes
+	 * @throws InterruptedException
 	 */
 
-	public static String solve(String grid, SearchingAlgorithms strategy, Boolean visualize) {
+	public static String solve(String grid, SearchingAlgorithms strategy, Boolean visualize)
+			throws InterruptedException {
 		EndGame endGame = new EndGame(grid, strategy);
 		GeneralSearch generalSearch = new GeneralSearch(endGame, strategy);
 		String plan = generalSearch.search();
 
 		if (plan != null && plan.length() > 0) {
 			if (visualize) {
-				// TODO: run the visualization module
+				new Visualization(generalSearch.getGoalNode().pathFromRoot(), grid);
 			}
 
 			return plan;
@@ -38,7 +40,12 @@ public class Main {
 	}
 
 	public static String solve(String grid, String strategy, Boolean visualize) {
-		return solve(grid, SearchingAlgorithms.valueOf(strategy), visualize);
+		try {
+			return solve(grid, SearchingAlgorithms.valueOf(strategy), visualize);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
