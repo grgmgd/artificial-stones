@@ -215,6 +215,12 @@ public class EndGame implements SearchProblem {
 		return healthDecreased + node.getCost();
 	}
 
+	/***
+	 * function responsible for computing the heuristic cost for each new structured
+	 * node according to the used strategy.
+	 * 
+	 * @param node the new node for which we want to store the heuristic cost.
+	 */
 	public void computeHeuristicCost(SearchTreeNode node) {
 		int thanosExtraCost = 0;
 		switch (strategy) {
@@ -222,10 +228,10 @@ public class EndGame implements SearchProblem {
 			thanosExtraCost = node.getState().getPosition().equals(thanosPosition) ? 0 : 1;
 			node.setHeuristicCost(node.getState().getRemainingStones().size() + thanosExtraCost);
 			break;
-		case GR2:
 		case AS1:
 			node.setHeuristicCost(node.getState().getRemainingStones().size() * 3);
 			break;
+		case GR2:
 		case AS2:
 			double minimum = 0;
 			double heuristicCost;
@@ -257,7 +263,7 @@ public class EndGame implements SearchProblem {
 	}
 
 	/***
-	 * function responsible for approving upon a certain made move.
+	 * helper function responsible for approving upon a certain made move.
 	 * 
 	 * @param movement the new location of Iron Man
 	 * @param state    the new state of the current node to explore it
@@ -301,8 +307,8 @@ public class EndGame implements SearchProblem {
 	}
 
 	/***
-	 * function responsible for indicating if two given position pairs are adjacent
-	 * to one another or not.
+	 * helper function responsible for indicating if two given position pairs are
+	 * adjacent to one another or not.
 	 * 
 	 * @param self  first pair
 	 * @param other second pair
@@ -321,6 +327,14 @@ public class EndGame implements SearchProblem {
 		return right || left || up || down;
 	}
 
+	/***
+	 * helper function responsible for computing the distance between any two given
+	 * pairs using the Euclidean distance.
+	 * 
+	 * @param x first location
+	 * @param y second location
+	 * @return double representing the distance between the two nodes
+	 */
 	public double getDistance(Pair<Integer, Integer> x, Pair<Integer, Integer> y) {
 		int x0 = x.getValue0();
 		int x1 = x.getValue1();
@@ -329,6 +343,11 @@ public class EndGame implements SearchProblem {
 		return Math.sqrt(Math.pow(x0 - y0, 2) + Math.pow(x1 - y1, 2));
 	}
 
+	/***
+	 * debugging function used to monitor each state's parameter progress.
+	 * 
+	 * @param state
+	 */
 	public void monitorState(State state) {
 		if (state.getRemainingStones().size() < scoreRemainingStones) {
 			scoreRemainingStones = state.getRemainingStones().size();
