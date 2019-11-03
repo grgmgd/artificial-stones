@@ -195,7 +195,15 @@ public class EndGame implements SearchProblem {
 		// monitorState(newState);
 		int newCost = pathCost(node, operator);
 		SearchTreeNode newNode = new SearchTreeNode(newState, node, operator, newCost, node.getDepth() + 1);
-		newNode.setHeuristicCost(node.getHeuristicCost());
+		switch (strategy) {
+		case GR1:
+		case GR2:
+		case AS1:
+		case AS2:
+			computeHeuristicCost(newNode);
+			break;
+		default:
+		}
 		return newNode;
 	}
 
@@ -204,31 +212,41 @@ public class EndGame implements SearchProblem {
 		HealthReport healthReport = getHealthDecreasingAmount(state, operator);
 		int healthDecreased = healthReport.computeDamage(operator);
 		state.decrementHealth(healthDecreased);
-		int priorCost = node.getCost();
-		switch (strategy) {
-		case GR1:
-		case GR2:
-		case AS1:
-		case AS2:
-			computeHeuristicCost(node);
-			break;
-		default:
-		}
-		return healthDecreased + priorCost;
+		return healthDecreased + node.getCost();
 	}
 
 	public void computeHeuristicCost(SearchTreeNode node) {
-		int thanosExtraCost = 0;
 		switch (strategy) {
 		case GR1:
-			thanosExtraCost = node.getState().getPosition().equals(thanosPosition) ? 0 : 1;
-			node.setHeuristicCost(node.getState().getRemainingStones().size() + thanosExtraCost);
+		case AS1:
+			node.setHeuristicCost(node.getState().getRemainingStones().size() * 3);
 			break;
 		case GR2:
-		case AS1:
-			node.setHeuristicCost(node.getState().getRemainingStones().size() + thanosExtraCost);
-			break;
 		case AS2:
+			double minimum = 0;
+			double heuristicCost;
+			ArrayList<Pair<Integer, Integer>> stones = node.getState().getRemainingStones();
+			Pair<Integer, Integer> ironMan = node.getState().getPosition();
+			if (stones.isEmpty()) {
+				double maxDistance = getDistance(new Pair<Integer, Integer>(0, 0),
+						new Pair<Integer, Integer>(gridSize.getValue0() - 1, gridSize.getValue1() - 1));
+				for (int i = 0; i < stones.size(); i++) {
+					Pair<Integer, Integer> stone = stones.get(i);
+					double distance = getDistance(ironMan, stone);
+					if (i == 0)
+						minimum = distance;
+					else
+						minimum = distance < minimum ? distance : minimum;
+				}
+				heuristicCost = minimum / maxDistance * 3;
+			}
+
+			else {
+				double distance = getDistance(ironMan, thanosPosition);
+				heuristicCost = distance > 10 ? 10 : distance;
+			}
+			node.setHeuristicCost(heuristicCost);
+			break;
 		default:
 			node.setHeuristicCost(node.getNormalCost());
 		}
@@ -297,6 +315,14 @@ public class EndGame implements SearchProblem {
 		boolean up = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc + 1;
 		boolean down = xSelfLoc == xOtherLoc && ySelfLoc == yOtherLoc - 1;
 		return right || left || up || down;
+	}
+
+	public double getDistance(Pair<Integer, Integer> x, Pair<Integer, Integer> y) {
+		int x0 = x.getValue0();
+		int x1 = x.getValue1();
+		int y0 = y.getValue0();
+		int y1 = y.getValue1();
+		return Math.sqrt(Math.pow(x0 - y0, 2) + Math.pow(x1 - y1, 2));
 	}
 
 	public void monitorState(State state) {

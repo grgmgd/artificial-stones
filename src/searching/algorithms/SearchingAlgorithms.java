@@ -11,4 +11,5 @@ public enum SearchingAlgorithms {
 
 		return false;
 	}
+
 }

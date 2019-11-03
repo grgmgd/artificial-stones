@@ -11,7 +11,7 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 	public SearchTreeNode parent;
 	public Operators leadingOperator;
 	public int cost;
-	public int heuristicCost;
+	public double heuristicCost;
 	public int depth;
 
 	public SearchTreeNode(State state, SearchTreeNode parent, Operators opr, int cost, int depth) {
@@ -47,7 +47,7 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 		return depth;
 	}
 
-	public int getHeuristicCost() {
+	public double getHeuristicCost() {
 		return heuristicCost;
 	}
 
@@ -66,6 +66,10 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 
 		return path;
 	}
+	
+	public void setHeuristicCost(double cost) {
+		heuristicCost = cost;
+	}
 
 	public String backtrack() {
 		if (this.getParent().getParent() == null)
@@ -83,10 +87,10 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 		switch (EndGame.strategy) {
 		case GR1:
 		case GR2:
-			return this.getHeuristicCost() - node.getHeuristicCost();
+			return (int) (this.getHeuristicCost() - node.getHeuristicCost());
 		case AS1:
 		case AS2:
-			return (this.getHeuristicCost() + this.getCost()) - (node.getHeuristicCost() + node.getCost());
+			return (int) ((this.getHeuristicCost() + this.getCost()) - (node.getHeuristicCost() + node.getCost()));
 		default:
 			return this.getCost() - node.getCost();
 		}
