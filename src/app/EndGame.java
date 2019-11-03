@@ -224,7 +224,7 @@ public class EndGame implements SearchProblem {
 			break;
 		case GR2:
 		case AS1:
-			node.setHeuristicCost(node.getState().getRemainingStones().size());
+			node.setHeuristicCost(node.getState().getRemainingStones().size() * 3);
 			break;
 		case AS2:
 			double minimum = 0;
