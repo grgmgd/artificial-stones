@@ -195,7 +195,15 @@ public class EndGame implements SearchProblem {
 		// monitorState(newState);
 		int newCost = pathCost(node, operator);
 		SearchTreeNode newNode = new SearchTreeNode(newState, node, operator, newCost, node.getDepth() + 1);
-		newNode.setHeuristicCost(node.getHeuristicCost());
+		switch (strategy) {
+		case GR1:
+		case GR2:
+		case AS1:
+		case AS2:
+			computeHeuristicCost(newNode);
+			break;
+		default:
+		}
 		return newNode;
 	}
 
@@ -205,15 +213,7 @@ public class EndGame implements SearchProblem {
 		int healthDecreased = healthReport.computeDamage(operator);
 		state.decrementHealth(healthDecreased);
 		int finalCost = node.getCost();
-		switch (strategy) {
-		case GR1:
-		case GR2:
-		case AS1:
-		case AS2:
-			computeHeuristicCost(node);
-			break;
-		default:
-		}
+
 		return healthDecreased + finalCost;
 	}
 
