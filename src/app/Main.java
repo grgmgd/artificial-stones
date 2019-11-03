@@ -56,7 +56,7 @@ public class Main {
 				"14,14;2,13;12,7;8,6,9,4,7,1,4,4,4,7,2,3;8,13,0,4,0,8,5,7,10,0",
 				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;0,0",
 				"13,13;4,2;2,4;6,1,1,10,8,4,9,2,2,8,9,4;6,4,3,4,3,11,1,12,1,9" };
-		SearchingAlgorithms strategy = SearchingAlgorithms.AS1;
+		SearchingAlgorithms strategy = SearchingAlgorithms.GR2;
 		int EXPLORE = 0;
 		long startTime = System.currentTimeMillis();
 		String solution = solve(grids[EXPLORE], strategy, true);

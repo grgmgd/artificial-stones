@@ -4,13 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Point;
-// import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,6 +24,7 @@ public class Visualization extends JFrame {
     ArrayList<SearchTreeNode> states;
     String grid;
     JLabel[][] mygrid;
+    JPanel p_map = new JPanel();
 
     public Visualization(ArrayList<SearchTreeNode> pathStates, String grid) throws InterruptedException {
         this.grid = grid;
@@ -44,23 +43,12 @@ public class Visualization extends JFrame {
         FrameDragListener frameDragListener = new FrameDragListener(this);
         this.addMouseListener(frameDragListener);
         this.addMouseMotionListener(frameDragListener);
-        bglink = "BackGround.jpeg";
+        bglink = "background.jpg";
         this.setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         setContentPane(new JLabel(new ImageIcon(bglink)));
-        JButton b_exit = new JButton();
-        b_exit.setName("close");
-        b_exit.setBounds(500, 595, 200, 100);
-        // b_exit.addActionListener((ActionListener) this);
-        b_exit.setOpaque(true);
-        b_exit.setContentAreaFilled(false);
-        b_exit.setIcon(new ImageIcon("EXIT.png"));
-        b_exit.setVisible(true);
-        b_exit.setBorderPainted(false);
-        add(b_exit);
         String[] parts = grid.split(";");
         String[] dimentions = parts[0].split(",");
-        JPanel p_map = new JPanel();
         p_map.setLayout(new GridLayout(Integer.parseInt(dimentions[0]),Integer.parseInt(dimentions[1])));
         p_map.setBounds(200,50,800,600);
         p_map.setOpaque(true);
@@ -74,8 +62,7 @@ public class Visualization extends JFrame {
             {
                 mygrid[i][j] = new JLabel();
                 mygrid[i][j].setOpaque(true);
-                // mygrid[i][j].setName("mapcell-"+i+""+j);
-                // mygrid[i][j].setIcon(new ImageIcon("AvengersLogo.png"));
+                mygrid[i][j].setBackground(new Color(0,0,0,90));
                 mygrid[i][j].setBorder(border);
                 mygrid[i][j].setVisible(true);
                 p_map.add(mygrid[i][j]);
@@ -93,53 +80,58 @@ public class Visualization extends JFrame {
         String[] thanosLocationString = parts[2].split(",");
         Pair<Integer, Integer> thanosPosition = new Pair<Integer, Integer>(Integer.parseInt(thanosLocationString[0]),
 				Integer.parseInt(thanosLocationString[1]));
-        mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setName("Thanos");
-        mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setText("Thanos");
-        mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setHorizontalTextPosition(JLabel.CENTER);
-        mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setVerticalTextPosition(JLabel.CENTER); 
+        mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setIcon(new ImageIcon("thanos_1.png"));
         mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setVisible(true);
         mapStones(state.getRemainingStones(), mygrid);
-        mapWariors(state.getWarriorsLocations(), mygrid);
+        mapWariors(stateNode, mygrid);
         updateIronMan(stateNode, mygrid);
         if(state.snapped){
-            mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setName("");
-            mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setText("");
+            mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setIcon(new ImageIcon());
             mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setVisible(true);
+            snap();
         }
         this.setVisible(true);
     }
 
+    public void snap(){
+        this.remove(p_map);
+        Border border = LineBorder.createGrayLineBorder();
+        JLabel snap = new JLabel();
+        snap.setBounds(100,70,1000,550);
+        snap.setOpaque(true);
+        snap.setBorder(border);
+        snap.setIcon(new ImageIcon("i_am_iron_man.gif"));
+        this.add(snap);
+    }
     public void updateIronMan(SearchTreeNode node, JLabel[][] grid){
         State prevState = node.getParent().getState();
         Pair<Integer, Integer> prevIronMan = prevState.getPosition();
-        grid[prevIronMan.getValue0()][prevIronMan.getValue1()].setName("");
-        grid[prevIronMan.getValue0()][prevIronMan.getValue1()].setText("");
+        grid[prevIronMan.getValue0()][prevIronMan.getValue1()].setIcon(new ImageIcon());;
         grid[prevIronMan.getValue0()][prevIronMan.getValue1()].setVisible(true);
         State state = node.getState();
         Pair<Integer, Integer> ironMan = state.getPosition();
-        grid[ironMan.getValue0()][ironMan.getValue1()].setName("IronMan");
-        grid[ironMan.getValue0()][ironMan.getValue1()].setText("IronMan");
-        grid[ironMan.getValue0()][ironMan.getValue1()].setHorizontalTextPosition(JLabel.CENTER);
-        grid[ironMan.getValue0()][ironMan.getValue1()].setVerticalTextPosition(JLabel.CENTER); 
+        grid[ironMan.getValue0()][ironMan.getValue1()].setIcon(new ImageIcon("iron_man.png"));;
         grid[ironMan.getValue0()][ironMan.getValue1()].setVisible(true);
     }
 
-    public void mapWariors(ArrayList<Pair<Integer, Integer>> wariors, JLabel[][] grid){
+    public void mapWariors(SearchTreeNode node, JLabel[][] grid){
+        State prevState = node.getParent().getState();
+        ArrayList<Pair<Integer, Integer>> prevWariors = prevState.getWarriorsLocations();
+        for(Pair<Integer, Integer> position : prevWariors) {
+            grid[position.getValue0()][position.getValue1()].setIcon(new ImageIcon());; 
+            grid[position.getValue0()][position.getValue1()].setVisible(true);
+        }
+        State state = node.getState();
+        ArrayList<Pair<Integer, Integer>> wariors = state.getWarriorsLocations();
         for(Pair<Integer, Integer> position : wariors) {
-            grid[position.getValue0()][position.getValue1()].setName("Warrior");
-            grid[position.getValue0()][position.getValue1()].setText("Warrior");
-            grid[position.getValue0()][position.getValue1()].setHorizontalTextPosition(JLabel.CENTER);
-            grid[position.getValue0()][position.getValue1()].setVerticalTextPosition(JLabel.CENTER); 
+            grid[position.getValue0()][position.getValue1()].setIcon(new ImageIcon("warrior.png"));;
             grid[position.getValue0()][position.getValue1()].setVisible(true);
         }
     }
 
     public void mapStones(ArrayList<Pair<Integer, Integer>> stones, JLabel[][] grid){
         for(Pair<Integer, Integer> stone : stones) {
-            grid[stone.getValue0()][stone.getValue1()].setName("Stone");
-            grid[stone.getValue0()][stone.getValue1()].setText("Stone");
-            grid[stone.getValue0()][stone.getValue1()].setHorizontalTextPosition(JLabel.CENTER);
-            grid[stone.getValue0()][stone.getValue1()].setVerticalTextPosition(JLabel.CENTER); 
+            grid[stone.getValue0()][stone.getValue1()].setIcon(new ImageIcon("stone_1.png"));
             grid[stone.getValue0()][stone.getValue1()].setVisible(true);
         }
     }
