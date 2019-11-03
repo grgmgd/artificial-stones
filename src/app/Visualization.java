@@ -33,29 +33,24 @@ public class Visualization extends JFrame {
     }
 
     public void initiatMap() throws InterruptedException {
-        this.setSize(1200, 700);
-        setUndecorated(true);
-        setTitle("Search Agend");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        main = new JPanel();
-        main.setLayout(new BorderLayout());
-        add(main, BorderLayout.CENTER);
-        FrameDragListener frameDragListener = new FrameDragListener(this);
-        this.addMouseListener(frameDragListener);
-        this.addMouseMotionListener(frameDragListener);
-        bglink = "background.jpg";
-        this.setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
-        setContentPane(new JLabel(new ImageIcon(bglink)));
+        Border border = LineBorder.createGrayLineBorder();
         String[] parts = grid.split(";");
         String[] dimentions = parts[0].split(",");
+        FrameDragListener frameDragListener = new FrameDragListener(this);
+        mygrid = new JLabel[Integer.parseInt(dimentions[0])][Integer.parseInt(dimentions[1])];
+        main = new JPanel();
+        main.setLayout(new BorderLayout());
+        bglink = "background.jpg";
+        setTitle("Search Agend");
+        setSize(1200, 700);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        add(main, BorderLayout.CENTER);
+        setLayout(new BorderLayout());
+        setContentPane(new JLabel(new ImageIcon(bglink)));
         p_map.setLayout(new GridLayout(Integer.parseInt(dimentions[0]),Integer.parseInt(dimentions[1])));
         p_map.setBounds(200,50,800,600);
         p_map.setOpaque(true);
         p_map.setBackground(new Color(0,0,0,90));
-        this.add(p_map);
-        mygrid = new JLabel[Integer.parseInt(dimentions[0])][Integer.parseInt(dimentions[1])];
-        Border border = LineBorder.createGrayLineBorder();
         for(int i = 0;i<Integer.parseInt(dimentions[0]);i++)
         {
             for(int j =0;j<Integer.parseInt(dimentions[1]);j++)
@@ -70,6 +65,10 @@ public class Visualization extends JFrame {
         }
         setSize(1199,699);
         setSize(1200,700);
+        this.addMouseListener(frameDragListener);
+        this.addMouseMotionListener(frameDragListener);
+        this.setLocationRelativeTo(null);
+        this.add(p_map);
         this.setVisible(true);
         startGame(this.states);
     }
@@ -83,8 +82,8 @@ public class Visualization extends JFrame {
         mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setIcon(new ImageIcon("thanos_1.png"));
         mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setVisible(true);
         mapStones(state.getRemainingStones(), mygrid);
-        mapWariors(stateNode, mygrid);
         updateIronMan(stateNode, mygrid);
+        mapWariors(stateNode, mygrid);
         if(state.snapped){
             mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setIcon(new ImageIcon());
             mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setVisible(true);
@@ -112,6 +111,8 @@ public class Visualization extends JFrame {
         Pair<Integer, Integer> ironMan = state.getPosition();
         grid[ironMan.getValue0()][ironMan.getValue1()].setIcon(new ImageIcon("iron_man.png"));;
         grid[ironMan.getValue0()][ironMan.getValue1()].setVisible(true);
+        if(state.getRemainingStones().contains(prevIronMan))
+            mapStones(state.getRemainingStones(), grid);
     }
 
     public void mapWariors(SearchTreeNode node, JLabel[][] grid){
