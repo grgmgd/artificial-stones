@@ -242,8 +242,7 @@ public class EndGame implements SearchProblem {
 			}
 
 			else {
-				double distance = getDistance(ironMan, thanosPosition);
-				heuristicCost = distance > 10 ? 10 : distance;
+				heuristicCost = 0;
 			}
 			node.setHeuristicCost(heuristicCost);
 			break;
