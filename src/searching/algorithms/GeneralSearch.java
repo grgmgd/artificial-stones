@@ -12,6 +12,7 @@ import app.SearchProblem;
 import app.SearchTreeNode;
 
 public class GeneralSearch {
+	private SearchTreeNode goal;
 	private Queue<SearchTreeNode> nodes;
 	private HashMap<String, Boolean> uniqueStates;
 	SearchingAlgorithms strategy;
@@ -56,13 +57,19 @@ public class GeneralSearch {
 		while (!nodes.isEmpty()) {
 			SearchTreeNode node = nodes.remove();
 			int nodeDepth = node.getDepth();
-			if (problem.goalTest(node.state))
+			if (problem.goalTest(node.state)){
+				goal = node;
 				return node.backtrack() + ";" + node.getCost() + ";" + this.expanded;
+			}
 			if (this.strategy == SearchingAlgorithms.ID && nodeDepth == depth)
 				continue;
 			quing(expand(node));
 		}
 		return null;
+	}
+
+	public SearchTreeNode getGoalNode() {
+		return goal;
 	}
 
 	public ArrayList<SearchTreeNode> expand(SearchTreeNode node) {

@@ -1,5 +1,7 @@
 package app;
 
+import java.util.ArrayList;
+
 /**
  * SearchTreeNode
  */
@@ -51,6 +53,18 @@ public class SearchTreeNode implements Comparable<SearchTreeNode> {
 
 	public void setHeuristicCost(int cost) {
 		heuristicCost = cost;
+	}
+
+	public ArrayList<SearchTreeNode> pathFromRoot() {
+		ArrayList<SearchTreeNode> path = new ArrayList<SearchTreeNode>();
+		SearchTreeNode node = this;
+
+		while(node.getParent() != null) {
+			path.add(0, node);
+			node = node.getParent();
+		}
+
+		return path;
 	}
 
 	public String backtrack() {
