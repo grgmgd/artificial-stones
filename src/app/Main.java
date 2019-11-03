@@ -57,7 +57,7 @@ public class Main {
 				"15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;0,0",
 				"13,13;4,2;2,4;6,1,1,10,8,4,9,2,2,8,9,4;6,4,3,4,3,11,1,12,1,9" };
 		SearchingAlgorithms strategy = SearchingAlgorithms.GR2;
-		int EXPLORE = 0;
+		int EXPLORE = 2;
 		long startTime = System.currentTimeMillis();
 		String solution = solve(grids[EXPLORE], strategy, true);
 		System.out.println("Exploring: " + grids[EXPLORE] + " With: " + strategy.toString());
