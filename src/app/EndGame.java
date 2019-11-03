@@ -238,7 +238,7 @@ public class EndGame implements SearchProblem {
 					else
 						minimum = distance < minimum ? distance : minimum;
 				}
-				heuristicCost = (Math.abs(maxDistance - minimum) / maxDistance) * 3;
+				heuristicCost = minimum / maxDistance * 3;
 			}
 
 			else {
