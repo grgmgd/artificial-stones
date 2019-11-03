@@ -85,7 +85,6 @@ public class Visualization extends JFrame {
         if (state.snapped) {
             mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setIcon(new ImageIcon());
             mygrid[thanosPosition.getValue0()][thanosPosition.getValue1()].setVisible(true);
-            snap();
         }
         this.setVisible(true);
     }
