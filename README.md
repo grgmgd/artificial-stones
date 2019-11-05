@@ -1,8 +1,6 @@
 # 💎 Artificial Stones
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-red.svg?style=flat-square)](#contributors)
 
 Aritificial intelligence project based on a version of the Avengers: Endgame movie.from Russell and Norvig's Artificial Intelligence - A Modern Approach 3rd Edition.
 
