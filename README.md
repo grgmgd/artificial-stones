@@ -28,3 +28,5 @@ Tests are included in `src/app/EndGameTests.java`
 ## Paper documenting the project
 
 [Documentation](Documentation.pdf)
+
+## Contributions
