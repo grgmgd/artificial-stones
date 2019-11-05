@@ -10,9 +10,12 @@
       "name": "George Maged",
       "avatar_url": "https://avatars3.githubusercontent.com/u/25729498?v=4",
       "profile": "https://github.com/grgmgd",
-      "contributions": [
-        "code"
-      ]
+    },
+    {
+      "login": "Pavelnas",
+      "name": "Pavelnas",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/28861354?v=4",
+      "profile": "https://github.com/Pavelnas",
     }
   ],
   "contributorsPerLine": 7,
