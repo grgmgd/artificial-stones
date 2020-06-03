@@ -6,7 +6,7 @@ Aritificial intelligence project based on a version of the Avengers: Endgame mov
 
 ## 🦸 Dependencies
 
-You need these packages in `jar` formtat installed in your `lib` directory before you can run the project.
+You need these packages in `jar` format installed in your `lib` directory before you can run the project.
 
 - [Java Tuples](http://www.java2s.com/Code/Jar/j/Downloadjavatuples12jar.htm)
 - [Hamcrest](http://www.java2s.com/Code/Jar/h/Downloadhamcrestall13jar.htm)
